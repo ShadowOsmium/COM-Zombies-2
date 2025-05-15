@@ -2,9 +2,9 @@ READ THIS FOR DOWNLOAD INSTRUCTIONS
 
 1.) Find the releases tab on GitHub. PC is the first image and Android is the second image. (Scroll down to the very bottom on mobile to find where the screenshot came from on the repository)
 
-![image](https://github.com/user-attachments/assets/80335d40-d2c1-42e3-8852-47f63bfe44b6)
+![image](https://github.com/user-attachments/assets/4abb886f-b50a-4daa-9a9f-989d35af1457)
 
-![image](https://github.com/user-attachments/assets/f246e9fc-b139-4b3e-9b12-71bf520f6dec)
+![image](https://github.com/user-attachments/assets/318dd54d-fa88-48c9-ac5c-2520a6b9f9f6)
 
 2.) Click on this download if you are an android player (If not, skip to step 3) |  Android.COMZ2.Rebalanced.apk
 
