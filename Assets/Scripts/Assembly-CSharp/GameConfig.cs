@@ -1670,6 +1670,9 @@ public class GameConfig : MonoBehaviour
 		case CoopBossType.E_SHARK:
 			result = EnemyType.E_SHARK;
 			break;
+        case CoopBossType.E_SHARK_E:
+			result = EnemyType.E_SHARK_E;
+			break;
 		}
 		return result;
 	}

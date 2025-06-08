@@ -137,6 +137,7 @@ public class EnemyFactory : MonoBehaviour
 			result = "HalloweenSubController";
 			break;
 		case EnemyType.E_SHARK:
+        case EnemyType.E_SHARK_E:
 			result = "SharkController";
 			break;
 		}

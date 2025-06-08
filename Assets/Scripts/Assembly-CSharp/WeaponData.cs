@@ -422,9 +422,9 @@ public class WeaponData
         if (exist_state == WeaponExistState.Owned)
         {
             total_bullet_count += count;
-            if (total_bullet_count > 9999)
+            if (total_bullet_count > 19999)
             {
-                total_bullet_count = 9999;
+                total_bullet_count = 19999;
             }
         }
     }
@@ -433,7 +433,7 @@ public class WeaponData
     {
         if (exist_state == WeaponExistState.Owned)
         {
-            if (total_bullet_count + config.buy_bullet_count > 9999)
+            if (total_bullet_count + config.buy_bullet_count > 19999)
             {
                 return false;
             }

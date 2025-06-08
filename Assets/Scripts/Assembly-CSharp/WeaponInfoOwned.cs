@@ -136,7 +136,7 @@ public class WeaponInfoOwned : MonoBehaviour
 	private void UpdateAmmo()
 	{
 		Ammo.Value.Text = weaponData.total_bullet_count.ToString("G");
-		if (weaponData.total_bullet_count + weaponData.config.buy_bullet_count <= 9999)
+		if (weaponData.total_bullet_count + weaponData.config.buy_bullet_count <= 19999)
 		{
 			Ammo.UpgradeValue.Text = "+" + weaponData.config.buy_bullet_count.ToString("G");
 			Ammo.UpgradeButton.Disable(false);

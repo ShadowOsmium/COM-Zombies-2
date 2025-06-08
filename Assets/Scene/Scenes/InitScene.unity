@@ -262,8 +262,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 0.33333334
-    height: 0.5327414
+    width: 1.0013254
+    height: 1.1180124
   near clip plane: -128
   far clip plane: 128
   field of view: 60
@@ -528,8 +528,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 640
-    height: 480
+    width: 1511
+    height: 360
 --- !u!1 &1486866191
 GameObject:
   m_ObjectHideFlags: 0
