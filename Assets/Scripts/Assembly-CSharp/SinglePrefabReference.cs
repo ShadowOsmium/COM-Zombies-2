@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class SinglePrefabReference : MonoBehaviour
 {
-	public GameObject Instance;
+    // This is the prefab or GameObject instance you want to instantiate at runtime
+    public GameObject Instance;
 
-	public List<GameObject> Accessory;
+    // List of accessory GameObjects that this prefab might have
+    public List<GameObject> Accessory;
 }

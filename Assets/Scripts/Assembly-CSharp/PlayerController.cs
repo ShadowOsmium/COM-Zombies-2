@@ -872,38 +872,46 @@ public class PlayerController : ObjectController
 		}
 	}
 
-	public virtual void CalculateSetFireState()
-	{
-		if (GameSceneController.Instance.input_controller.Fire)
-		{
-			if (cur_weapon.HaveBullets())
-			{
-				SetFireState(SHOOT_STATE);
-			}
-			else if (cur_weapon.weapon_data.EnableReload())
-			{
-				WeaponReload();
-			}
-			else
-			{
-				ResetFireIdle();
-			}
-		}
-		else if (could_enter_after_fire && fire_state.GetStateType() == SHOOT_STATE.GetStateType())
-		{
-			SetFireState(AFTER_SHOOT_STATE);
-		}
-		else if (fire_state.GetStateType() != AFTER_SHOOT_STATE.GetStateType())
-		{
-			ResetFireIdle();
-		}
-		if (last_fire_input != cur_fire_input)
-		{
-			UpdateWeaponUIShow();
-		}
-	}
+    private bool isReloading = false; // Add this to the class
 
-	protected void ResetAnimationLayer()
+    public virtual void CalculateSetFireState()
+    {
+        // Prevent actions while reloading
+        if (isReloading)
+            return;
+
+        if (GameSceneController.Instance.input_controller.Fire)
+        {
+            if (cur_weapon.HaveBullets())
+            {
+                SetFireState(SHOOT_STATE);
+            }
+            else if (cur_weapon.weapon_data.EnableReload())
+            {
+                isReloading = true; // Start reload lock
+                WeaponReload();     // This should start a coroutine or animation event
+            }
+            else
+            {
+                ResetFireIdle();
+            }
+        }
+        else if (could_enter_after_fire && fire_state.GetStateType() == SHOOT_STATE.GetStateType())
+        {
+            SetFireState(AFTER_SHOOT_STATE);
+        }
+        else if (fire_state.GetStateType() != AFTER_SHOOT_STATE.GetStateType())
+        {
+            ResetFireIdle();
+        }
+
+        if (last_fire_input != cur_fire_input)
+        {
+            UpdateWeaponUIShow();
+        }
+    }
+
+    protected void ResetAnimationLayer()
 	{
 		base.GetComponent<Animation>()[ANI_MOVE_IDLE].layer = -1;
 		base.GetComponent<Animation>()[ANI_MOVE_RUN_FORWORD].layer = -1;
@@ -1402,7 +1410,7 @@ public class PlayerController : ObjectController
 		{
 			Recover(avatar_data.hp_capacity * GameConfig.Instance.hp_package_ratio);
 		}
-		else if (item.item_type == ItemType.Bullet_PrimaryWeapon)
+		/*else if (item.item_type == ItemType.Bullet_PrimaryWeapon)
 		{
 			int num = (int)((float)CurPrimaryWeapon.weapon_data.config.buy_bullet_count * GameConfig.Instance.bullet_package_ratio);
 			Debug.Log("add bullet:" + num);
@@ -1412,7 +1420,7 @@ public class PlayerController : ObjectController
 			RemoveTimerScript removeTimerScript2 = gameObject2.AddComponent<RemoveTimerScript>();
 			removeTimerScript2.life = 3f;
 			UpdateWeaponUIShow();
-		}
+		}*/
 	}
 
 	public virtual void PlayBaseBallEff()

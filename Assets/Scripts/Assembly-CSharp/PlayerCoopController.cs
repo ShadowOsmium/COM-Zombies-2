@@ -298,13 +298,13 @@ public class PlayerCoopController : PlayerController
 			RemoveTimerScript removeTimerScript2 = gameObject2.AddComponent<RemoveTimerScript>();
 			removeTimerScript2.life = 3f;
 		}
-		else if (item.item_type == ItemType.Bullet_PrimaryWeapon)
+		/*else if (item.item_type == ItemType.Bullet_PrimaryWeapon)
 		{
 			GameObject gameObject3 = Object.Instantiate(GameSceneController.Instance.Eff_Accessory[11], base.transform.position, Quaternion.identity) as GameObject;
 			gameObject3.transform.parent = base.transform;
 			RemoveTimerScript removeTimerScript3 = gameObject3.AddComponent<RemoveTimerScript>();
 			removeTimerScript3.life = 3f;
-		}
+		}*/
 	}
 
 	public override void Rebirth()
@@ -471,14 +471,14 @@ public class PlayerCoopController : PlayerController
 			removeTimerScript2.life = 3f;
 			break;
 		}
-		case ItemType.Bullet_PrimaryWeapon:
+		/*case ItemType.Bullet_PrimaryWeapon:
 		{
 			GameObject gameObject = Object.Instantiate(GameSceneController.Instance.Eff_Accessory[11], base.transform.position, Quaternion.identity) as GameObject;
 			gameObject.transform.parent = base.transform;
 			RemoveTimerScript removeTimerScript = gameObject.AddComponent<RemoveTimerScript>();
 			removeTimerScript.life = 3f;
 			break;
-		}
+		}*/
 		}
 	}
 }

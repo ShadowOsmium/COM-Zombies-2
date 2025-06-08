@@ -431,6 +431,13 @@
 					<height>240</height>
 				</FrameInfo>
 				<FrameInfo>
+					<frameName>big_boss_icon_6</frameName>
+					<x>731</x>
+					<y>397</y>
+					<width>240</width>
+					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
 					<frameName>button_1_p</frameName>
 					<x>2</x>
 					<y>416</y>

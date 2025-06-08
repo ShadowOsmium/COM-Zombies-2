@@ -107,6 +107,7 @@ public class EnemyFactory : MonoBehaviour
 			result = "BoomerController";
 			break;
 		case EnemyType.E_BOOMER_TIMER:
+        case EnemyType.E_BOOMER_TIMER_E:
 			result = "BoomerTimerController";
 			break;
 		case EnemyType.E_CROW:
@@ -117,6 +118,7 @@ public class EnemyFactory : MonoBehaviour
 			result = "ClownController";
 			break;
 		case EnemyType.E_FATCOOK:
+        case EnemyType.E_FATCOOK_E:
 			result = "FatCookController";
 			break;
 		case EnemyType.E_HAOKE_A:
@@ -124,9 +126,11 @@ public class EnemyFactory : MonoBehaviour
 			result = "HaokeController";
 			break;
 		case EnemyType.E_WRESTLER:
+        case EnemyType.E_WRESTLER_E:
 			result = "WrestlerController";
 			break;
 		case EnemyType.E_HALLOWEEN:
+        case EnemyType.E_HALLOWEEN_E:
 			result = "HalloweenController";
 			break;
 		case EnemyType.E_HALLOWEEN_SUB:

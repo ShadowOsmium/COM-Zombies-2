@@ -485,286 +485,574 @@ public class GameData : MonoBehaviour
     public bool LoadData()
     {
         string content = string.Empty;
-        if (Utils.FileReadString(Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2") + ".bytes", ref content))
+        if (!Utils.FileReadString(Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2") + ".bytes", ref content))
+            return false;
+
+        try
         {
             Configure configure = new Configure();
+
             content = DataDecrypt(content);
             configure.Load(content);
-            total_cash = new GameDataInt(int.Parse(configure.GetSingle("Save", "Cash")));
-            total_crystal = new GameDataInt(int.Parse(configure.GetSingle("Save", "Crystal")));
-            total_voucher = new GameDataInt(int.Parse(configure.GetSingle("Save", "Voucher")));
-            if (configure.GetSingle("Save", "TapjoyPoints") != null)
-            {
-                tapjoyPoints = int.Parse(configure.GetSingle("Save", "TapjoyPoints"));
-            }
-            day_level = int.Parse(configure.GetSingle("Save", "DayLevel"));
-            cur_avatar = (AvatarType)int.Parse(configure.GetSingle("Save", "AvatarType"));
-            sensitivity_ratio = float.Parse(configure.GetSingle("Save", "SensitivityRatio"));
-            int num = int.Parse(configure.GetSingle("Save", "EnterTutorial"));
-            is_enter_tutorial = ((num != 0) ? true : false);
+
+            // Game version string
             game_version = configure.GetSingle("Save", "Version");
-            num = int.Parse(configure.GetSingle("Save", "ShowUITutorial"));
-            show_ui_tutorial = ((num != 0) ? true : false);
-            num = int.Parse(configure.GetSingle("Save", "ShowUITutorialWeapon"));
-            show_ui_tutorial_weapon = ((num != 0) ? true : false);
-            enter_shop_count = int.Parse(configure.GetSingle("Save", "EnterShopCount"));
-            timeserver_url = configure.GetSingle("Save", "TimeserverUrl");
-            statistics_url = configure.GetSingle("Save", "StatisticsUrl");
-            iap_check_url = "http://192.225.224.97:7600/gameapi/GameCommon.do?action=groovy&json=";
-            int num2 = int.Parse(configure.GetSingle("Save", "IapCheck"));
-            TRINITI_IAP_CEHCK = ((num2 != 0) ? true : false);
-            if (configure.GetSingle("Save", "RedeemGetUrl") != null)
+            if (game_version == null)
             {
-                redeem_get_url = configure.GetSingle("Save", "RedeemGetUrl");
+                game_version = "0";
             }
-            if (configure.GetSingle("Save", "RedeemAcceptUrl") != null)
+
+            float parsedGameVersion = 0f;
+            float.TryParse(game_version, out parsedGameVersion);
+
+            // Load currencies
+            string cashStr = configure.GetSingle("Save", "Cash");
+            int cash;
+            if (!int.TryParse(cashStr, out cash))
             {
-                redeem_accept_url = configure.GetSingle("Save", "RedeemAcceptUrl");
+                cash = 0;
             }
-            if (configure.GetSingle("Save", "RedeemAwardRatio") != null)
+            total_cash = new GameDataInt(cash);
+
+            string crystalStr = configure.GetSingle("Save", "Crystal");
+            int crystal;
+            if (!int.TryParse(crystalStr, out crystal))
             {
-                redeem_change_ratio = float.Parse(configure.GetSingle("Save", "RedeemAwardRatio"));
+                crystal = 0;
             }
-            if (configure.GetSingle("Save", "NickName") != null)
+            total_crystal = new GameDataInt(crystal);
+
+            string voucherStr = configure.GetSingle("Save", "Voucher");
+            int voucher;
+            if (!int.TryParse(voucherStr, out voucher))
             {
-                NickName = configure.GetSingle("Save", "NickName");
+                voucher = 0;
             }
-            if (configure.GetSingle("Save", "IAPResend_android") != "false")
+            total_voucher = new GameDataInt(voucher);
+
+            // TapjoyPoints
+            string tapjoyPointsStr = configure.GetSingle("Save", "TapjoyPoints");
+            if (tapjoyPointsStr != null)
             {
-                string single = configure.GetSingle("Save", "IAPResend_android");
-                if (single != null)
+                int tapjoyPointsTemp;
+                if (int.TryParse(tapjoyPointsStr, out tapjoyPointsTemp))
                 {
-                    string[] array = single.Split('|');
-                    string product_Id = array[0];
-                    string tid = array[1];
-                    string receipt = array[2];
-                    string action = array[3];
-                    string signature = array[4];
-                    IapCenter.Instance.SendIAPVerifyRequest_for_Android(product_Id, tid, receipt, action, signature);
+                    tapjoyPoints = tapjoyPointsTemp;
                 }
             }
-            int num3 = 0;
-            num3 = int.Parse(configure.GetSingle("Save", "WeaponsDataCount"));
-            for (int i = 0; i < num3; i++)
+
+            // Day level
+            string dayLevelStr = configure.GetSingle("Save", "DayLevel");
+            if (dayLevelStr != null)
             {
-                string array2 = configure.GetArray2("Save", "WeaponsData", i, 0);
-                WeaponData weaponData = null;
-                if (WeaponData_Set.ContainsKey(array2))
+                int dayLevelTemp;
+                if (int.TryParse(dayLevelStr, out dayLevelTemp))
                 {
-                    weaponData = WeaponData_Set[array2];
-                    weaponData.level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 2));
-                    weaponData.total_bullet_count = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 3));
-                    weaponData.exist_state = (WeaponExistState)int.Parse(configure.GetArray2("Save", "WeaponsData", i, 4));
-                    if (configure.GetArray2("Save", "WeaponsData", i, 5) != null)
-                    {
-                        weaponData.damage_level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 5));
-                    }
-                    else
-                    {
-                        weaponData.damage_level = weaponData.level;
-                    }
-                    if (configure.GetArray2("Save", "WeaponsData", i, 6) != null)
-                    {
-                        weaponData.frequency_level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 6));
-                    }
-                    else
-                    {
-                        weaponData.frequency_level = weaponData.level;
-                    }
-                    if (configure.GetArray2("Save", "WeaponsData", i, 7) != null)
-                    {
-                        weaponData.clip_level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 7));
-                    }
-                    else
-                    {
-                        weaponData.clip_level = weaponData.level;
-                    }
-                    if (configure.GetArray2("Save", "WeaponsData", i, 8) != null)
-                    {
-                        weaponData.range_level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 8));
-                    }
-                    else
-                    {
-                        weaponData.range_level = weaponData.level;
-                    }
-                    if (configure.GetArray2("Save", "WeaponsData", i, 9) != null)
-                    {
-                        weaponData.stretch_level = int.Parse(configure.GetArray2("Save", "WeaponsData", i, 9));
-                    }
-                    else
-                    {
-                        weaponData.stretch_level = weaponData.level;
-                    }
+                    day_level = dayLevelTemp;
                 }
             }
-            num3 = int.Parse(configure.GetSingle("Save", "AvatarsDataCount"));
-            for (int j = 0; j < num3; j++)
+
+            // Avatar type
+            string avatarTypeStr = configure.GetSingle("Save", "AvatarType");
+            if (avatarTypeStr != null)
             {
-                AvatarType key = (AvatarType)int.Parse(configure.GetArray2("Save", "AvatarsData", j, 1));
-                AvatarData avatarData = null;
-                if (!AvatarData_Set.ContainsKey(key))
+                int avatarTypeInt;
+                if (int.TryParse(avatarTypeStr, out avatarTypeInt))
                 {
-                    continue;
-                }
-                avatarData = AvatarData_Set[key];
-                avatarData.level = int.Parse(configure.GetArray2("Save", "AvatarsData", j, 3));
-                avatarData.armor_level = int.Parse(configure.GetArray2("Save", "AvatarsData", j, 4));
-                avatarData.cur_exp = new GameDataInt(int.Parse(configure.GetArray2("Save", "AvatarsData", j, 5)));
-                avatarData.exist_state = (AvatarExistState)int.Parse(configure.GetArray2("Save", "AvatarsData", j, 6));
-                avatarData.primary_equipment = configure.GetArray2("Save", "AvatarsData", j, 7);
-                if (configure.GetArray2("Save", "AvatarsData", j, 8) != null)
-                {
-                    avatarData.hp_level = int.Parse(configure.GetArray2("Save", "AvatarsData", j, 8));
+                    cur_avatar = (AvatarType)avatarTypeInt;
                 }
                 else
                 {
-                    avatarData.hp_level = avatarData.level;
-                }
-                if (configure.GetArray2("Save", "AvatarsData", j, 9) != null)
-                {
-                    avatarData.damage_level = int.Parse(configure.GetArray2("Save", "AvatarsData", j, 9));
-                }
-                else
-                {
-                    avatarData.damage_level = avatarData.level;
-                }
-                int num4 = 10;
-                for (int k = 0; k < 2; k++)
-                {
-                    if (configure.GetArray2("Save", "AvatarsData", j, num4) != null)
-                    {
-                        string array3 = configure.GetArray2("Save", "AvatarsData", j, num4);
-                        avatarData.skill_list[k] = array3;
-                        num4++;
-                    }
-                }
-            }
-            if (configure.GetSingle("Save", "SkillAvatarDataCount") != null)
-            {
-                num3 = int.Parse(configure.GetSingle("Save", "SkillAvatarDataCount"));
-                for (int l = 0; l < num3; l++)
-                {
-                    string array4 = configure.GetArray2("Save", "SkillAvatarData", l, 0);
-                    if (Skill_Avatar_Set.ContainsKey(array4))
-                    {
-                        SkillData skillData = Skill_Avatar_Set[array4];
-                        skillData.level = int.Parse(configure.GetArray2("Save", "SkillAvatarData", l, 1));
-                        skillData.exist_state = (SkillExistState)int.Parse(configure.GetArray2("Save", "SkillAvatarData", l, 2));
-                        skillData.ResetData();
-                    }
+                    cur_avatar = AvatarType.Human; // your default enum value
                 }
             }
             else
             {
-                SkillData skillData2 = Skill_Avatar_Set["Whirlwind"];
-                skillData2.level = WeaponData_Set["Chainsaw"].level;
-                skillData2.ResetData();
-                skillData2 = Skill_Avatar_Set["Enchant"];
-                skillData2.level = WeaponData_Set["Medicine"].level;
-                skillData2.ResetData();
-                skillData2 = Skill_Avatar_Set["BaseballRobot"];
-                skillData2.level = WeaponData_Set["Baseball"].level;
-                skillData2.ResetData();
-                skillData2 = Skill_Avatar_Set["Grenade"];
-                skillData2.level = WeaponData_Set["Shield"].level;
-                skillData2.ResetData();
-                skillData2 = Skill_Avatar_Set["Scarecrow"];
-                skillData2.level = WeaponData_Set["44Magnum"].level;
-                skillData2.ResetData();
+                cur_avatar = AvatarType.Human;
             }
-            num3 = int.Parse(configure.GetSingle("Save", "StoryProbDataCount"));
-            for (int m = 0; m < num3; m++)
+
+            // Sensitivity ratio
+            string sensitivityStr = configure.GetSingle("Save", "SensitivityRatio");
+            if (sensitivityStr != null)
             {
-                string array5 = configure.GetArray2("Save", "StoryProbData", m, 0);
-                int count = int.Parse(configure.GetArray2("Save", "StoryProbData", m, 1));
+                float sensitivityTemp;
+                if (float.TryParse(sensitivityStr, out sensitivityTemp))
+                {
+                    sensitivity_ratio = sensitivityTemp;
+                }
+            }
+
+            // Enter tutorial
+            string enterTutorialStr = configure.GetSingle("Save", "EnterTutorial");
+            if (enterTutorialStr != null)
+            {
+                int enterTutorialTemp;
+                if (int.TryParse(enterTutorialStr, out enterTutorialTemp))
+                {
+                    is_enter_tutorial = (enterTutorialTemp != 0);
+                }
+            }
+
+            // Show UI tutorial
+            string showUITutorialStr = configure.GetSingle("Save", "ShowUITutorial");
+            if (showUITutorialStr != null)
+            {
+                int showUITutorialTemp;
+                if (int.TryParse(showUITutorialStr, out showUITutorialTemp))
+                {
+                    show_ui_tutorial = (showUITutorialTemp != 0);
+                }
+            }
+
+            string showUITutorialWeaponStr = configure.GetSingle("Save", "ShowUITutorialWeapon");
+            if (showUITutorialWeaponStr != null)
+            {
+                int showUITutorialWeaponTemp;
+                if (int.TryParse(showUITutorialWeaponStr, out showUITutorialWeaponTemp))
+                {
+                    show_ui_tutorial_weapon = (showUITutorialWeaponTemp != 0);
+                }
+            }
+
+            // Enter shop count
+            string enterShopCountStr = configure.GetSingle("Save", "EnterShopCount");
+            if (enterShopCountStr != null)
+            {
+                int enterShopCountTemp;
+                if (int.TryParse(enterShopCountStr, out enterShopCountTemp))
+                {
+                    enter_shop_count = enterShopCountTemp;
+                }
+            }
+
+            // URLs
+            string timeServerUrl = configure.GetSingle("Save", "TimeserverUrl");
+            if (timeServerUrl != null)
+            {
+                timeserver_url = timeServerUrl;
+            }
+            else
+            {
+                timeserver_url = "";
+            }
+
+            string statisticsUrl = configure.GetSingle("Save", "StatisticsUrl");
+            if (statisticsUrl != null)
+            {
+                statistics_url = statisticsUrl;
+            }
+            else
+            {
+                statistics_url = "";
+            }
+
+            iap_check_url = "http://192.225.224.97:7600/gameapi/GameCommon.do?action=groovy&json=";
+
+            string iapCheckStr = configure.GetSingle("Save", "IapCheck");
+            if (iapCheckStr != null)
+            {
+                int iapCheckTemp;
+                if (int.TryParse(iapCheckStr, out iapCheckTemp))
+                {
+                    TRINITI_IAP_CEHCK = (iapCheckTemp != 0);
+                }
+            }
+
+            string redeemGetUrl = configure.GetSingle("Save", "RedeemGetUrl");
+            if (redeemGetUrl != null)
+            {
+                redeem_get_url = redeemGetUrl;
+            }
+
+            string redeemAcceptUrl = configure.GetSingle("Save", "RedeemAcceptUrl");
+            if (redeemAcceptUrl != null)
+            {
+                redeem_accept_url = redeemAcceptUrl;
+            }
+
+            string redeemAwardRatioStr = configure.GetSingle("Save", "RedeemAwardRatio");
+            if (redeemAwardRatioStr != null)
+            {
+                float redeemRatioTemp;
+                if (float.TryParse(redeemAwardRatioStr, out redeemRatioTemp))
+                {
+                    redeem_change_ratio = redeemRatioTemp;
+                }
+            }
+
+            string nickNameStr = configure.GetSingle("Save", "NickName");
+            if (!string.IsNullOrEmpty(nickNameStr))
+            {
+                NickName = nickNameStr;
+            }
+
+            string iapResendAndroidStr = configure.GetSingle("Save", "IAPResend_android");
+            if (!string.IsNullOrEmpty(iapResendAndroidStr) && iapResendAndroidStr != "false")
+            {
+                string[] parts = iapResendAndroidStr.Split('|');
+                if (parts.Length >= 5)
+                {
+                    string product_Id = parts[0];
+                    string tid = parts[1];
+                    string receipt = parts[2];
+                    string action = parts[3];
+                    string signature = parts[4];
+                    IapCenter.Instance.SendIAPVerifyRequest_for_Android(product_Id, tid, receipt, action, signature);
+                }
+            }
+
+            // Load weapons data
+            string weaponsCountStr = configure.GetSingle("Save", "WeaponsDataCount");
+            int weaponsCount = 0;
+            if (weaponsCountStr != null)
+            {
+                int.TryParse(weaponsCountStr, out weaponsCount);
+            }
+
+            for (int i = 0; i < weaponsCount; i++)
+            {
+                string weaponId = configure.GetArray2("Save", "WeaponsData", i, 0);
+                if (weaponId == null)
+                    continue;
+
+                WeaponData weaponData;
+                if (!WeaponData_Set.TryGetValue(weaponId, out weaponData))
+                    continue;
+
+                int tempInt;
+
+                string levelStr = configure.GetArray2("Save", "WeaponsData", i, 2);
+                if (levelStr != null && int.TryParse(levelStr, out tempInt))
+                {
+                    weaponData.level = tempInt;
+                }
+
+                string totalBulletCountStr = configure.GetArray2("Save", "WeaponsData", i, 3);
+                if (totalBulletCountStr != null && int.TryParse(totalBulletCountStr, out tempInt))
+                {
+                    weaponData.total_bullet_count = tempInt;
+                }
+
+                string existStateStr = configure.GetArray2("Save", "WeaponsData", i, 4);
+                if (existStateStr != null && int.TryParse(existStateStr, out tempInt))
+                {
+                    weaponData.exist_state = (WeaponExistState)tempInt;
+                }
+
+                weaponData.damage_level = ParseOrDefault(configure.GetArray2("Save", "WeaponsData", i, 5), weaponData.level);
+                weaponData.frequency_level = ParseOrDefault(configure.GetArray2("Save", "WeaponsData", i, 6), weaponData.level);
+                weaponData.clip_level = ParseOrDefault(configure.GetArray2("Save", "WeaponsData", i, 7), weaponData.level);
+                weaponData.range_level = ParseOrDefault(configure.GetArray2("Save", "WeaponsData", i, 8), weaponData.level);
+                weaponData.stretch_level = ParseOrDefault(configure.GetArray2("Save", "WeaponsData", i, 9), weaponData.level);
+            }
+
+            // Load avatars data
+            string avatarsCountStr = configure.GetSingle("Save", "AvatarsDataCount");
+            int avatarsCount = 0;
+            if (avatarsCountStr != null)
+            {
+                int.TryParse(avatarsCountStr, out avatarsCount);
+            }
+
+            for (int j = 0; j < avatarsCount; j++)
+            {
+                string avatarKeyStr = configure.GetArray2("Save", "AvatarsData", j, 1);
+                if (avatarKeyStr == null)
+                    continue;
+
+                int avatarKeyInt;
+                if (!int.TryParse(avatarKeyStr, out avatarKeyInt))
+                    continue;
+
+                AvatarType avatarKey = (AvatarType)avatarKeyInt;
+
+                AvatarData avatarData;
+                if (!AvatarData_Set.TryGetValue(avatarKey, out avatarData))
+                    continue;
+
+                int tempInt;
+
+                string avatarLevelStr = configure.GetArray2("Save", "AvatarsData", j, 3);
+                if (avatarLevelStr != null && int.TryParse(avatarLevelStr, out tempInt))
+                {
+                    avatarData.level = tempInt;
+                }
+
+                string armorLevelStr = configure.GetArray2("Save", "AvatarsData", j, 4);
+                if (armorLevelStr != null && int.TryParse(armorLevelStr, out tempInt))
+                {
+                    avatarData.armor_level = tempInt;
+                }
+
+                string expStr = configure.GetArray2("Save", "AvatarsData", j, 5);
+                if (expStr != null)
+                {
+                    int expVal;
+                    if (int.TryParse(expStr, out expVal))
+                    {
+                        avatarData.cur_exp = new GameDataInt(expVal);
+                    }
+                }
+
+                string existStateStr = configure.GetArray2("Save", "AvatarsData", j, 6);
+                if (existStateStr != null && int.TryParse(existStateStr, out tempInt))
+                {
+                    avatarData.exist_state = (AvatarExistState)tempInt;
+                }
+
+                string primaryEquipmentStr = configure.GetArray2("Save", "AvatarsData", j, 7);
+                if (primaryEquipmentStr != null)
+                {
+                    avatarData.primary_equipment = primaryEquipmentStr;
+                }
+
+                avatarData.hp_level = ParseOrDefault(configure.GetArray2("Save", "AvatarsData", j, 8), avatarData.level);
+                avatarData.damage_level = ParseOrDefault(configure.GetArray2("Save", "AvatarsData", j, 9), avatarData.level);
+
+                for (int k = 0; k < 2; k++)
+                {
+                    string skillVal = configure.GetArray2("Save", "AvatarsData", j, 10 + k);
+                    if (skillVal != null)
+                    {
+                        avatarData.skill_list[k] = skillVal;
+                    }
+                }
+            }
+
+            // SkillAvatarData loading
+            string skillAvatarDataCountStr = configure.GetSingle("Save", "SkillAvatarDataCount");
+            int skillAvatarDataCount = 0;
+            if (skillAvatarDataCountStr != null)
+            {
+                int.TryParse(skillAvatarDataCountStr, out skillAvatarDataCount);
+            }
+
+            if (skillAvatarDataCount > 0)
+            {
+                for (int l = 0; l < skillAvatarDataCount; l++)
+                {
+                    string skillKey = configure.GetArray2("Save", "SkillAvatarData", l, 0);
+                    if (skillKey == null)
+                        continue;
+
+                    SkillData skillData;
+                    if (!Skill_Avatar_Set.TryGetValue(skillKey, out skillData))
+                        continue;
+
+                    int tempInt;
+
+                    string levelStr = configure.GetArray2("Save", "SkillAvatarData", l, 1);
+                    if (levelStr != null && int.TryParse(levelStr, out tempInt))
+                    {
+                        skillData.level = tempInt;
+                    }
+
+                    string existStateStr = configure.GetArray2("Save", "SkillAvatarData", l, 2);
+                    if (existStateStr != null && int.TryParse(existStateStr, out tempInt))
+                    {
+                        skillData.exist_state = (SkillExistState)tempInt;
+                    }
+
+                    skillData.ResetData();
+                }
+            }
+            else
+            {
+                SkillData skillData2;
+
+                if (Skill_Avatar_Set.TryGetValue("Whirlwind", out skillData2))
+                {
+                    skillData2.level = WeaponData_Set["Chainsaw"].level;
+                    skillData2.ResetData();
+                }
+                if (Skill_Avatar_Set.TryGetValue("Enchant", out skillData2))
+                {
+                    skillData2.level = WeaponData_Set["Medicine"].level;
+                    skillData2.ResetData();
+                }
+                if (Skill_Avatar_Set.TryGetValue("BaseballRobot", out skillData2))
+                {
+                    skillData2.level = WeaponData_Set["Baseball"].level;
+                    skillData2.ResetData();
+                }
+                if (Skill_Avatar_Set.TryGetValue("Grenade", out skillData2))
+                {
+                    skillData2.level = WeaponData_Set["Shield"].level;
+                    skillData2.ResetData();
+                }
+                if (Skill_Avatar_Set.TryGetValue("Scarecrow", out skillData2))
+                {
+                    skillData2.level = WeaponData_Set["44Magnum"].level;
+                    skillData2.ResetData();
+                }
+            }
+
+            // StoryProbData loading
+            string storyProbDataCountStr = configure.GetSingle("Save", "StoryProbDataCount");
+            int storyProbDataCount = 0;
+            if (storyProbDataCountStr != null)
+            {
+                int.TryParse(storyProbDataCountStr, out storyProbDataCount);
+            }
+
+            for (int m = 0; m < storyProbDataCount; m++)
+            {
+                string key = configure.GetArray2("Save", "StoryProbData", m, 0);
+                string countStr = configure.GetArray2("Save", "StoryProbData", m, 1);
+                int count = 0;
+                if (countStr != null)
+                {
+                    int.TryParse(countStr, out count);
+                }
+
+                if (string.IsNullOrEmpty(key))
+                {
+                    continue;
+                }
+
                 GameProb gameProb = new GameProb();
-                gameProb.prob_cfg = GameConfig.Instance.ProbsConfig_Set[array5];
-                gameProb.count = count;
-                GameStoryProbs_Set[array5] = gameProb;
+                GameProbsCfg probCfg;
+                if (GameConfig.Instance.ProbsConfig_Set.TryGetValue(key, out probCfg))
+                {
+                    gameProb.prob_cfg = probCfg;
+                    gameProb.count = count;
+                    GameStoryProbs_Set[key] = gameProb;
+                }
             }
-            num3 = int.Parse(configure.GetSingle("Save", "FragmentProbDataCount"));
-            for (int n = 0; n < num3; n++)
+
+            // FragmentProbData loading
+            string fragmentProbDataCountStr = configure.GetSingle("Save", "FragmentProbDataCount");
+            int fragmentProbDataCount = 0;
+            if (fragmentProbDataCountStr != null)
             {
-                string array6 = configure.GetArray2("Save", "FragmentProbData", n, 0);
-                int count2 = int.Parse(configure.GetArray2("Save", "FragmentProbData", n, 1));
-                if (GameConfig.Instance.ProbsConfig_Set.ContainsKey(array6))
+                int.TryParse(fragmentProbDataCountStr, out fragmentProbDataCount);
+            }
+
+            for (int n = 0; n < fragmentProbDataCount; n++)
+            {
+                string key = configure.GetArray2("Save", "FragmentProbData", n, 0);
+                string countStr = configure.GetArray2("Save", "FragmentProbData", n, 1);
+                int count2 = 0;
+                if (countStr != null)
+                {
+                    int.TryParse(countStr, out count2);
+                }
+
+                if (string.IsNullOrEmpty(key))
+                {
+                    continue;
+                }
+
+                GameProbsCfg probCfg;
+                if (GameConfig.Instance.ProbsConfig_Set.TryGetValue(key, out probCfg))
                 {
                     GameProb gameProb2 = new GameProb();
-                    gameProb2.prob_cfg = GameConfig.Instance.ProbsConfig_Set[array6];
+                    gameProb2.prob_cfg = probCfg;
                     gameProb2.count = count2;
-                    WeaponFragmentProbs_Set[array6] = gameProb2;
+                    WeaponFragmentProbs_Set[key] = gameProb2;
                 }
             }
-            num3 = int.Parse(configure.GetSingle("Save", "IntensifierProbDataCount"));
-            for (int num5 = 0; num5 < num3; num5++)
+
+            // IntensifierProbData loading
+            string intensifierProbDataCountStr = configure.GetSingle("Save", "IntensifierProbDataCount");
+            int intensifierProbDataCount = 0;
+            if (intensifierProbDataCountStr != null)
             {
-                string array7 = configure.GetArray2("Save", "IntensifierProbData", num5, 0);
-                int count3 = int.Parse(configure.GetArray2("Save", "IntensifierProbData", num5, 1));
-                GameProb gameProb3 = new GameProb();
-                gameProb3.prob_cfg = GameConfig.Instance.ProbsConfig_Set[array7];
-                gameProb3.count = count3;
-                WeaponIntensifierProbs_Set[array7] = gameProb3;
+                int.TryParse(intensifierProbDataCountStr, out intensifierProbDataCount);
             }
-            num3 = int.Parse(configure.GetSingle("Save", "EnemyLoadDataCount"));
-            for (int num6 = 0; num6 < num3; num6++)
+
+            for (int num5 = 0; num5 < intensifierProbDataCount; num5++)
             {
-                string array8 = configure.GetArray2("Save", "EnemyLoadData", num6, 0);
-                int value = int.Parse(configure.GetArray2("Save", "EnemyLoadData", num6, 1));
-                Enemy_Loading_Set[array8] = value;
-            }
-            if (configure.GetSingle("Save", "LotterySeatCount") != null)
-            {
-                num3 = int.Parse(configure.GetSingle("Save", "LotterySeatCount"));
-                for (int num7 = 0; num7 < num3; num7++)
+                string key = configure.GetArray2("Save", "IntensifierProbData", num5, 0);
+                string countStr = configure.GetArray2("Save", "IntensifierProbData", num5, 1);
+                int count3 = 0;
+                if (countStr != null)
                 {
-                    string array9 = configure.GetArray("Save", "LotterySeatData", num7);
-                    lottery_seat_state[num7] = array9;
+                    int.TryParse(countStr, out count3);
                 }
-            }
-            num3 = int.Parse(configure.GetSingle("Save", "ConfigVersionCount"));
-            for (int num8 = 0; num8 < num3; num8++)
-            {
-                string array10 = configure.GetArray2("Save", "ConfigVersion", num8, 0);
-                string array11 = configure.GetArray2("Save", "ConfigVersion", num8, 1);
-                GameConfig.Instance.Config_Version_Set[array10] = array11;
-            }
-            Iap_failed_info_count = int.Parse(configure.GetSingle("Save", "IapFailedCount"));
-            if (Iap_failed_info_count > 0)
-            {
-                for (int num9 = 1; num9 < Iap_failed_info_count + 1; num9++)
+
+                if (string.IsNullOrEmpty(key))
                 {
-                    string single2 = configure.GetSingle("Save", "IapFailedInfoTid" + num9);
-                    string content2 = string.Empty;
-                    if (Utils.FileReadString(Utils.SavePath() + MD5Sample.GetMd5String("IapFailedInfoReceipt" + num9) + ".bytes", ref content2))
-                    {
-                        content2 = DataDecrypt(content2);
-                    }
-                    Iap_failed_info[single2] = content2;
+                    continue;
+                }
+
+                GameProbsCfg probCfg;
+                if (GameConfig.Instance.ProbsConfig_Set.TryGetValue(key, out probCfg))
+                {
+                    GameProb gameProb3 = new GameProb();
+                    gameProb3.prob_cfg = probCfg;
+                    gameProb3.count = count3;
+                    WeaponIntensifierProbs_Set[key] = gameProb3;
                 }
             }
-            return true;
+            return true; // loaded successfully
         }
-        return false;
+        catch (Exception ex)
+        {
+            Debug.LogError("LoadData Exception: " + ex.Message);
+            return false;
+        }
     }
+
+
+    // Helper method for parsing int or fallback
+    private int ParseOrDefault(string input, int defaultValue)
+    {
+        int result;
+        if (input != null && int.TryParse(input, out result))
+        {
+            return result;
+        }
+        return defaultValue;
+    }
+
 
     public bool LoadDailyData()
     {
         string content = string.Empty;
-        if (Utils.FileReadString(Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2Daily") + ".bytes", ref content))
+        string filePath = Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2Daily") + ".bytes";
+
+        if (Utils.FileReadString(filePath, ref content))
         {
             Configure configure = new Configure();
             content = DataDecrypt(content);
             configure.Load(content);
+
             save_date = configure.GetSingle("Save", "SavDate");
-            daily_mission_count = int.Parse(configure.GetSingle("Save", "DailyMissionCount"));
-            if (configure.GetSingle("Save", "LotteryResetCount") != null)
+
+            int missionCount = 0;
+            string missionCountStr = configure.GetSingle("Save", "DailyMissionCount");
+            if (missionCountStr != null && int.TryParse(missionCountStr, out missionCount))
             {
-                lottery_reset_count = int.Parse(configure.GetSingle("Save", "LotteryResetCount"));
+                daily_mission_count = missionCount;
             }
-            if (configure.GetSingle("Save", "LotteryCount") != null)
+            else
             {
-                lottery_count = int.Parse(configure.GetSingle("Save", "LotteryCount"));
+                daily_mission_count = 0; // fallback default
             }
+
+            int resetCount = 0;
+            string resetCountStr = configure.GetSingle("Save", "LotteryResetCount");
+            if (resetCountStr != null && int.TryParse(resetCountStr, out resetCount))
+            {
+                lottery_reset_count = resetCount;
+            }
+            else
+            {
+                lottery_reset_count = 0;
+            }
+
+            int lCount = 0;
+            string lotteryCountStr = configure.GetSingle("Save", "LotteryCount");
+            if (lotteryCountStr != null && int.TryParse(lotteryCountStr, out lCount))
+            {
+                lottery_count = lCount;
+            }
+            else
+            {
+                lottery_count = 0;
+            }
+
             if (save_date != cur_save_date)
             {
                 Debug.Log("Reset DailyMissionCount!");
@@ -773,12 +1061,16 @@ public class GameData : MonoBehaviour
                 lottery_reset_count = 0;
                 lottery_count = 0;
                 is_daily_cd_crystal = false;
+
                 SaveDailyData();
             }
+
             return true;
         }
+
         return false;
     }
+
 
     public List<WeaponData> GetOwnerWeapons()
     {
@@ -1399,8 +1691,8 @@ public class GameData : MonoBehaviour
     {
         if (!GameConfig.IsEditorMode())
         {
-            string text = Encipher(data);
-            return XXTEAUtils.Encrypt(text, GetImportContent());
+            string enciphered = Encipher(data);                  // Obfuscate data first
+            return XXTEAUtils.Encrypt(enciphered, GetImportContent()); // Then encrypt it
         }
         return data;
     }
@@ -1409,8 +1701,8 @@ public class GameData : MonoBehaviour
     {
         if (!GameConfig.IsEditorMode())
         {
-            string data_encipher = XXTEAUtils.Decrypt(data, GetImportContent());
-            return Encipher(data_encipher);
+            string decrypted = XXTEAUtils.Decrypt(data, GetImportContent()); // Decrypt first
+            return Encipher(decrypted);                                   // Then de-obfuscate
         }
         return data;
     }

@@ -85,7 +85,8 @@ public class GameSceneCoopController : GameSceneController
 		switch (enemyTypeFromBossType)
 		{
 		case EnemyType.E_FATCOOK:
-			if (num == 0)
+        case EnemyType.E_FATCOOK_E:
+             if (num == 0)
 			{
 				enable_spawn_ani = "Boss_FatCook_Camera_Show01";
 			}
@@ -106,6 +107,7 @@ public class GameSceneCoopController : GameSceneController
 			}
 			break;
 		case EnemyType.E_WRESTLER:
+        case EnemyType.E_WRESTLER_E:
 			if (num == 0)
 			{
 				enable_spawn_ani = "Wrestler_Camera_Show01";
@@ -116,6 +118,7 @@ public class GameSceneCoopController : GameSceneController
 			}
 			break;
 		case EnemyType.E_HALLOWEEN:
+        case EnemyType.E_HALLOWEEN_E:
 			if (num == 0)
 			{
 				enable_spawn_ani = "Hook_Demon_Camera_Show01";
@@ -126,6 +129,7 @@ public class GameSceneCoopController : GameSceneController
 			}
 			break;
 		case EnemyType.E_SHARK:
+        case EnemyType.E_SHARK_E:
 			if (num == 0)
 			{
 				enable_spawn_ani = "Zombie_Guter_Tennung_Camera_Show01";
@@ -330,6 +334,8 @@ public class GameSceneCoopController : GameSceneController
 		}
 	}
 
+
+
 	private void OnDestroy()
 	{
 		TNetConnection.UnregisterSceneCallbacks();
@@ -371,37 +377,44 @@ public class GameSceneCoopController : GameSceneController
 		}
 	}
 
-	public override void MissionFinished()
-	{
-		Debug.Log("Mission Finished:" + GamePlayingState);
-		OpenClikPlugin.Hide();
-		HidePanels();
-		TAudioController tAudioController = main_camera.gameObject.AddComponent<TAudioController>();
-		tAudioController.StopAudio(music_name);
-		if (GamePlayingState == PlayingState.Lose)
-		{
-			reward_coop_panel.title_bk.texture = "BIAOTILAN-2";
-			music_name = "MusicLose";
-		}
-		else if (GamePlayingState == PlayingState.Win)
-		{
-			reward_coop_panel.title_bk.texture = "BIAOTILAN";
-			music_name = "MusicWin";
-		}
-		reward_coop_panel.Show();
-		tAudioController.PlayAudio(music_name);
-		MissionStatistics();
-		GameData.Instance.SaveData();
-		Screen.lockCursor = false;
-		if (tnetObj != null)
-		{
-			tnetObj.Send(new LeaveRoomRequest());
-			TNetConnection.UnregisterSceneCallbacks();
-		}
-		Invoke("DestroyNetConnection", 0.5f);
-	}
+    public override void MissionFinished()
+    {
+        Debug.Log("Mission Finished:" + GamePlayingState);
+        OpenClikPlugin.Hide();
+        HidePanels();
 
-	private void MissionStatistics()
+        TAudioController tAudioController = main_camera.gameObject.AddComponent<TAudioController>();
+        tAudioController.StopAudio(music_name);
+
+        if (GamePlayingState == PlayingState.Lose)
+        {
+            reward_coop_panel.title_bk.texture = "BIAOTILAN-2";
+            music_name = "MusicLose";
+        }
+        else if (GamePlayingState == PlayingState.Win)
+        {
+            reward_coop_panel.title_bk.texture = "BIAOTILAN";
+            music_name = "MusicWin";
+        }
+
+        reward_coop_panel.Show();
+        tAudioController.PlayAudio(music_name);
+        MissionStatistics();
+        GameData.Instance.SaveData();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (tnetObj != null)
+        {
+            tnetObj.Send(new LeaveRoomRequest());
+            TNetConnection.UnregisterSceneCallbacks();
+        }
+
+        Invoke("DestroyNetConnection", 0.5f);
+    }
+
+    private void MissionStatistics()
 	{
 	}
 
@@ -441,7 +454,7 @@ public class GameSceneCoopController : GameSceneController
 	public override void SetLoseState()
 	{
 		GamePlayingState = PlayingState.Lose;
-		cur_rebirth_cost = (int)Mathf.Pow(2f, player_death_count);
+		cur_rebirth_cost = (int)Mathf.Pow(5f, player_death_count);
 		if (GameData.Instance.total_crystal.GetIntVal() >= cur_rebirth_cost)
 		{
 			game_main_panel.rebirth_panel.Show();
@@ -452,29 +465,29 @@ public class GameSceneCoopController : GameSceneController
 		}
 	}
 
-	public void MissionRewardFailed()
-	{
-		List<GameRewardCoop> list = new List<GameRewardCoop>();
-		CoopBossCfg coopBossCfg = GameConfig.Instance.Coop_Boss_Cfg_Set[GameConfig.GetEnemyTypeFromBossType(GameData.Instance.cur_coop_boss)];
-		Debug.Log("Coop boss reward:" + coopBossCfg.ToString());
-		GameData.Instance.total_cash += coopBossCfg.reward_gold_failed;
-		PlayerID playerID = new PlayerID(player_controller.avatar_data.avatar_type, player_controller.avatar_data.avatar_state, player_controller.avatar_data.show_name, 0);
-		bool flag = false;
-		foreach (PlayerID key in Player_damage_Set.Keys)
-		{
-			GameReward weapon_fragment = null;
-			flag = ((key.tnet_id == player_controller.tnet_user.Id) ? true : false);
-			GameRewardCoop item = new GameRewardCoop(playerID.avatar_type, playerID.avatar_state, playerID.player_name, (int)Player_damage_Set[key], GameRewardCoop.RewardMoneyType.CASH, coopBossCfg.reward_gold_failed, weapon_fragment, flag, false);
-			list.Add(item);
-		}
-		reward_coop_panel.ResetGameReward(list);
-		Hashtable hashtable = new Hashtable();
-		hashtable.Add("Boss", coopBossCfg.boss_name);
-		hashtable.Add("Time", (int)(Time.time - coop_start_time));
-		GameData.Instance.UploadStatistics("Coop_Mission_Failed", hashtable);
-	}
+    public void MissionRewardFailed()
+    {
+        List<GameRewardCoop> list = new List<GameRewardCoop>();
+        CoopBossCfg coopBossCfg = GameConfig.Instance.Coop_Boss_Cfg_Set[GameConfig.GetEnemyTypeFromBossType(GameData.Instance.cur_coop_boss)];
+        Debug.Log("Coop boss reward:" + coopBossCfg.ToString());
+        GameData.Instance.total_cash += coopBossCfg.reward_gold_failed;
+        PlayerID playerID = new PlayerID(player_controller.avatar_data.avatar_type, player_controller.avatar_data.avatar_state, player_controller.avatar_data.show_name, 0);
+        bool flag = false;
+        foreach (PlayerID key in Player_damage_Set.Keys)
+        {
+            GameReward weapon_fragment = null;
+            flag = ((key.tnet_id == player_controller.tnet_user.Id) ? true : false);
+            GameRewardCoop item = new GameRewardCoop(playerID.avatar_type, playerID.avatar_state, playerID.player_name, (int)Player_damage_Set[key], GameRewardCoop.RewardMoneyType.CASH, coopBossCfg.reward_gold_failed, weapon_fragment, flag, false);
+            list.Add(item);
+        }
+        reward_coop_panel.ResetGameReward(list);
+        Hashtable hashtable = new Hashtable();
+        hashtable.Add("Boss", coopBossCfg.boss_name);
+        hashtable.Add("Time", (int)(Time.time - coop_start_time));
+        GameData.Instance.UploadStatistics("Coop_Mission_Failed", hashtable);
+    }
 
-	public override void MissionReward()
+    public override void MissionReward()
 	{
 		List<GameRewardCoop> list = new List<GameRewardCoop>();
 		CoopBossCfg coopBossCfg = GameConfig.Instance.Coop_Boss_Cfg_Set[GameConfig.GetEnemyTypeFromBossType(GameData.Instance.cur_coop_boss)];
@@ -612,7 +625,7 @@ public class GameSceneCoopController : GameSceneController
 					Debug.Log("check weapon combine:" + weapon_name);
 					if (GameData.Instance.CheckFragmentProbCombine(weapon_name) && GameData.Instance.WeaponData_Set[weapon_name].Unlock())
 					{
-						Debug.Log("weapon:" + weapon_name + " is unlocked, it enable combie.");
+						Debug.Log("weapon:" + weapon_name + " is now unlocked! You can now buy the weapon.");
 						unlock_new_weapon_name = weapon_name;
 						unlock_new_weapon = true;
 						UnlockInGame unlockInGame2 = new UnlockInGame();
@@ -1437,17 +1450,22 @@ public class GameSceneCoopController : GameSceneController
 		}
 	}
 
-	public void QuitGameForDisconnect(float time)
-	{
-		if (tnetObj != null)
-		{
-			tnetObj.Send(new LeaveRoomRequest());
-			TNetConnection.UnregisterSceneCallbacks();
-		}
-		Invoke("CoopOverToShop", time);
-	}
+    public void QuitGameForDisconnect(float time)
+    {
+        // Unpause immediately to prevent game freeze
+        Time.timeScale = 1f;
 
-	private void DestroyNetConnection()
+        if (tnetObj != null)
+        {
+            tnetObj.Send(new LeaveRoomRequest());
+            TNetConnection.UnregisterSceneCallbacks();
+        }
+
+        Invoke("CoopOverToShop", time);
+    }
+
+
+    private void DestroyNetConnection()
 	{
 		TNetConnection.UnregisterSceneCallbacks();
 		TNetConnection.Disconnect();

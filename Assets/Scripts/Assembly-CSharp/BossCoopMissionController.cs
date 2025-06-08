@@ -248,54 +248,66 @@ public class BossCoopMissionController : MissionController
 			sFSObject.PutSFSArray("spawnEnemy", sFSArray);
 			tnetObj.Send(new BroadcastMessageRequest(sFSObject));
 		}
-		if (type != EnemyType.E_FATCOOK && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial)
+		if (type != EnemyType.E_FATCOOK && type != EnemyType.E_FATCOOK_E && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial)
 		{
 			GameSceneController.Instance.ground_stone_pool.GetComponent<ObjectPool>().CreateObject(nest.transform.position, Quaternion.identity);
 		}
 		return GameConfig.Instance.EnemyConfig_Set[type].missionWeight;
 	}
 
-	public IEnumerator FatcookSummon()
-	{
-		GameObject grave;
-		if (boss != null)
-		{
-			grave = FindClosedGrave(boss.transform.position);
-		}
-		else
-		{
-			PlayerController player = GameSceneController.Instance.player_controller;
-			grave = FindClosedGrave(player.transform.position);
-		}
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-	}
+    public IEnumerator FatcookSummon()
+    {
+        GameObject grave;
+        if (boss != null)
+        {
+            grave = FindClosedGrave(boss.transform.position);
+        }
+        else
+        {
+            PlayerController player = GameSceneController.Instance.player_controller;
+            grave = FindClosedGrave(player.transform.position);
+        }
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+        yield return 1;
+    }
 
-	public IEnumerator HalloweenSummon()
-	{
-		GameObject grave;
-		if (boss != null)
-		{
-			grave = FindClosedGrave(boss.transform.position);
-		}
-		else
-		{
-			PlayerController player = GameSceneController.Instance.player_controller;
-			grave = FindClosedGrave(player.transform.position);
-		}
-		SpwanZombiesFromGrave(EnemyType.E_HALLOWEEN_SUB, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_HALLOWEEN_SUB, grave);
-		yield return 1;
-	}
+    public IEnumerator HalloweenSummon()
+    {
+        Debug.Log("HalloweenSummon CALLED!");
 
-	public override float SpwanZombiesFromGrave(EnemyType type, GameObject grave)
+        GameObject grave = (boss != null)
+            ? FindClosedGrave(boss.transform.position)
+            : FindClosedGrave(GameSceneController.Instance.player_controller.transform.position);
+
+        SpwanZombiesFromGrave(EnemyType.E_HALLOWEEN_SUB, grave);
+        yield return 1;
+        SpwanZombiesFromGrave(EnemyType.E_HALLOWEEN_SUB, grave);
+        yield return 1;
+    }
+
+    public override float SpwanZombiesFromGrave(EnemyType type, GameObject grave)
 	{
 		if (grave == null)
 		{
@@ -318,7 +330,7 @@ public class BossCoopMissionController : MissionController
 			sFSObject.PutSFSArray("spawnEnemy", sFSArray);
 			tnetObj.Send(new BroadcastMessageRequest(sFSObject));
 		}
-		if (type != EnemyType.E_FATCOOK && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial)
+		if (type != EnemyType.E_FATCOOK && type != EnemyType.E_FATCOOK_E && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial)
 		{
 			GameSceneController.Instance.ground_stone_pool.GetComponent<ObjectPool>().CreateObject(vector, Quaternion.identity);
 		}

@@ -36,7 +36,9 @@ public class FatCookController : EnemyController
 
 	public string ANI_IDLE_03 = "Fall_Back01";
 
-	protected Collider attackCollider;
+    private BossCoopMissionController coopMission;
+
+    protected Collider attackCollider;
 
 	protected Transform miantuanHand;
 
@@ -135,7 +137,8 @@ public class FatCookController : EnemyController
 			stone_ani1 = "Zombie_FatCook01";
 			stone_ani2 = "Zombie_FatCook01";
 		}
-		PlayGroundStone();
+        coopMission = GameSceneController.Instance.mission_controller as BossCoopMissionController;
+        PlayGroundStone();
 		base.Init();
 		SKILL_ATTACK_COMBO_STATE = EnemyState.Create(EnemyStateType.FatCook_Combo, this);
 		SKILL_MIANTUAN_STATE = EnemyState.Create(EnemyStateType.FatCook_Miantuan, this);
@@ -554,15 +557,19 @@ public class FatCookController : EnemyController
 		}
 	}
 
-	public void SummonTimerBoomer()
-	{
-		if (((BossHalfHpState)HALF_HP_STATE).IsPlayed)
-		{
-			GameSceneController.Instance.FatCookSummon();
-		}
-	}
+    public void SummonTimerBoomer()
+    {
+        if (((BossHalfHpState)HALF_HP_STATE).IsPlayed && coopMission != null)
+        {
+            coopMission.StartCoroutine(coopMission.FatcookSummon());
+        }
+        else if (coopMission == null)
+        {
+            Debug.LogWarning("coopMission is null, FatCookSummon skipped.");
+        }
+    }
 
-	public void MoveBack(float deltaTime)
+    public void MoveBack(float deltaTime)
 	{
 		base.transform.Translate(Vector3.back * deltaTime, Space.Self);
 	}

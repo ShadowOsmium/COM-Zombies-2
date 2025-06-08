@@ -55,11 +55,11 @@ public class UIShopSkillDetailPanelController : UIShopPanelController
 		int num = 0;
 		int num2 = 0;
 		GameObject gameObject = skill_info_list[num++];
-		gameObject.GetComponent<TUILabel>().Text = "Level:" + cur_skill.level;
+		gameObject.GetComponent<TUILabel>().Text = "Level: " + cur_skill.level;
 		if (cur_skill.level < cur_skill.config.max_level)
 		{
 			gameObject = skill_info_list_next[num2++];
-			gameObject.GetComponent<TUILabel>().Text = "Level:" + (cur_skill.level + 1);
+			gameObject.GetComponent<TUILabel>().Text = "Level: " + (cur_skill.level + 1);
 			skill_upgrade_button.Disable(false);
 			up_price_n.Text = cur_skill.UpgradePrice.ToString();
 			up_price_p.Text = cur_skill.UpgradePrice.ToString();
@@ -73,61 +73,61 @@ public class UIShopSkillDetailPanelController : UIShopPanelController
 		if (Mathf.Abs(cur_skill.config.hp_cfg.base_data - cur_skill.config.hp_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "HP:" + cur_skill.hp_capcity.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "HP: " + cur_skill.hp_capcity.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "HP:" + cur_skill.hp_capcity_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "HP: " + cur_skill.hp_capcity_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.damage_cfg.base_data - cur_skill.config.damage_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "Damage:" + cur_skill.damage_val.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "Damage: " + cur_skill.damage_val.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "Damage:" + cur_skill.damage_val_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "Damage: " + cur_skill.damage_val_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.range_cfg.base_data - cur_skill.config.range_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "Range:" + cur_skill.range_val.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "Range: " + cur_skill.range_val.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "Range:" + cur_skill.range_val_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "Range: " + cur_skill.range_val_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.life_time_cfg.base_data - cur_skill.config.life_time_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "Life Time:" + cur_skill.life_time.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "Life Span:" + cur_skill.life_time.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "Life Time:" + cur_skill.life_time_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "Life Span:" + cur_skill.life_time_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.cd_time_cfg.base_data - cur_skill.config.cd_time_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "CD Time:" + cur_skill.cd_interval.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "CD Time: " + cur_skill.cd_interval.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "CD Time:" + cur_skill.cd_interval_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "CD Time: " + cur_skill.cd_interval_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.frequency_cfg.base_data - cur_skill.config.frequency_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "Frequency:" + cur_skill.frequency_val.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "Fire Rate:" + cur_skill.frequency_val.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "Frequency:" + cur_skill.frequency_val_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "Fire Rate:" + cur_skill.frequency_val_next.ToString("f1");
 			}
 		}
 		for (int k = num; k < skill_info_list.Count; k++)
@@ -160,7 +160,7 @@ public class UIShopSkillDetailPanelController : UIShopPanelController
 		{
 			int num = cur_skill.UpgradePrice - GameData.Instance.total_voucher.GetIntVal();
 			int crystal = Mathf.CeilToInt((float)num / GameConfig.Instance.crystal_to_voucher);
-			string content = "You need " + num + " more vouchers to complete the action.";
+			string content = "You need " + num + " more vouchers to buy this.";
 			CrystalExchangeCash crystalExchangeCash = new CrystalExchangeCash();
 			crystalExchangeCash.Crystal = crystal;
 			crystalExchangeCash.Voucher = num;

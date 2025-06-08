@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class AnimationUtil
 {
-	public static bool IsPlayingAnimation(GameObject obj, string name)
-	{
-		return obj.GetComponent<Animation>().IsPlaying(name);
-	}
+    public static bool IsPlayingAnimation(GameObject obj, string name)
+    {
+        Animation anim = obj.GetComponent<Animation>();
+        return anim != null && anim.IsPlaying(name);
+    }
 
-	public static bool AnimationEnds(GameObject obj, string name)
+    public static bool AnimationEnds(GameObject obj, string name)
 	{
 		if (obj.GetComponent<Animation>()[name].time >= obj.GetComponent<Animation>()[name].clip.length || obj.GetComponent<Animation>()[name].wrapMode == WrapMode.Loop)
 		{

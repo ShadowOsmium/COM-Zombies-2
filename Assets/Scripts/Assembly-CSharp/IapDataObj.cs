@@ -19,10 +19,10 @@ public class IapDataObj : MonoBehaviour
 	{
 		IapId = id;
 		ExchangeId = null;
-		Name.Text = IapCenter.GetIapCrystalCount(id).ToString("N0");
-		Image.texture = "tCrystal_" + id;
-		Price.Text = "$" + GetDollarAmount();
-		PriceCrystal.SetActive(false);
+		//Name.Text = IapCenter.GetIapCrystalCount(id).ToString("N0");
+		//Image.texture = "tCrystal_" + id;
+		//Price.Text = "$" + GetDollarAmount();
+		//PriceCrystal.SetActive(false);
 	}
 
 	public void Init(CrystalExchangeCash id)
@@ -35,26 +35,26 @@ public class IapDataObj : MonoBehaviour
 		PriceCrystal.SetActive(true);
 	}
 
-	private string GetDollarAmount()
-	{
-		switch (IapId)
-		{
-		case IapCenter.IapIdName.Cent99:
-			return "0.99";
-		case IapCenter.IapIdName.Cent499:
-			return "4.99";
-		case IapCenter.IapIdName.Cent999:
-			return "9.99";
-		case IapCenter.IapIdName.Cent1999:
-			return "19.99";
-		case IapCenter.IapIdName.Cent4999:
-			return "49.99";
-		case IapCenter.IapIdName.Cent9999:
-			return "99.99";
-		default:
-			return string.Empty;
-		}
-	}
+	//private string GetDollarAmount()
+	//{
+		//switch (IapId)
+		//{
+		//case IapCenter.IapIdName.Cent99:
+		//	return "0.99";
+		//case IapCenter.IapIdName.Cent499:
+		//	return "4.99";
+		//case IapCenter.IapIdName.Cent999:
+		//	return "9.99";
+		//case IapCenter.IapIdName.Cent1999:
+		//	return "19.99";
+		//case IapCenter.IapIdName.Cent4999:
+		//	return "49.99";
+		//case IapCenter.IapIdName.Cent9999:
+		//	return "99.99";
+		//default:
+		//	return string.Empty;
+		//}
+	//}
 
 	private void OnBuyIapEvent(TUIControl control, int eventType, float wparam, float lparam, object data)
 	{

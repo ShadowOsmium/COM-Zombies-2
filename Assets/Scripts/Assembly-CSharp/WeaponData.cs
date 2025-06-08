@@ -422,9 +422,9 @@ public class WeaponData
         if (exist_state == WeaponExistState.Owned)
         {
             total_bullet_count += count;
-            if (total_bullet_count > 1)
+            if (total_bullet_count > 9999)
             {
-                total_bullet_count = 1;
+                total_bullet_count = 9999;
             }
         }
     }
@@ -542,22 +542,39 @@ public class WeaponData
 
     public bool Reload()
     {
-        // If the clip is already full, no reload is needed
         if (clip_bullet_count >= clip_capacity)
         {
             return false;
         }
-
-        // Refill the clip to its full capacity (ammo is unlimited)
-        clip_bullet_count = clip_capacity;
-        return true;
+        if (clip_bullet_count <= clip_capacity && clip_bullet_count == total_bullet_count)
+        {
+            return false;
+        }
+        if (total_bullet_count > 0)
+        {
+            if (total_bullet_count > clip_capacity)
+            {
+                clip_bullet_count = clip_capacity;
+            }
+            else
+            {
+                clip_bullet_count = total_bullet_count;
+            }
+            return true;
+        }
+        return false;
     }
 
     public bool OnFire()
     {
+        if (config.is_infinity_ammo)
+        {
+            return true;
+        }
         if (clip_bullet_count > 0)
         {
-            clip_bullet_count--; // Decrease the clip's bullet count when firing
+            clip_bullet_count--;
+            total_bullet_count--;
             GameSceneController.Instance.player_controller.UpdateWeaponUIShow();
             return true;
         }
@@ -566,13 +583,16 @@ public class WeaponData
 
     public bool EnableFire()
     {
-        return clip_bullet_count > 0;
+        if (clip_bullet_count > 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public int GetRemainCount()
     {
-        // Return how many bullets are left in the clip
-        return clip_bullet_count;
+        return total_bullet_count - clip_bullet_count;
     }
 
     public bool NeedReload()
@@ -582,8 +602,19 @@ public class WeaponData
 
     public bool EnableReload()
     {
-        // Allow reload only if the clip is not full
-        return clip_bullet_count < clip_capacity;
+        if (clip_bullet_count >= clip_capacity)
+        {
+            return false;
+        }
+        if (clip_bullet_count <= clip_capacity && clip_bullet_count == total_bullet_count)
+        {
+            return false;
+        }
+        if (total_bullet_count > 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public bool EnableBuyButtletInBattlet()

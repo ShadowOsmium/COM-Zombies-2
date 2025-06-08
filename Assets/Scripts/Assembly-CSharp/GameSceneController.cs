@@ -118,7 +118,7 @@ public class GameSceneController : MonoBehaviour
 
 	public GameObject add_item_pool;
 
-	//public GameObject bullet_add_item_pool;
+	public GameObject bullet_add_item_pool;
 
 	public GameObject money_add_item_pool;
 
@@ -829,7 +829,7 @@ public class GameSceneController : MonoBehaviour
 					Debug.Log("unlock weapon:" + reward_weapon);
 					if (GameData.Instance.WeaponData_Set[reward_weapon].Unlock())
 					{
-						Debug.Log("weapon:" + reward_weapon + " is unlocked, it enable combie.");
+						Debug.Log("weapon:" + reward_weapon + " is unlocked, buy in the shop.");
 						unlock_new_weapon_name = reward_weapon;
 						unlock_new_weapon = true;
 						UnlockInGame unlockInGame = new UnlockInGame();
@@ -1133,7 +1133,7 @@ public class GameSceneController : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning("fatcook summon disenable.");
+			Debug.LogError("NO SPAWN.");
 		}
 	}
 
@@ -1145,8 +1145,8 @@ public class GameSceneController : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning("halloween summon disenable.");
-		}
+            Debug.LogError("NO SPAWN.");
+        }
 	}
 
 	public virtual EnemyData GetBossData()

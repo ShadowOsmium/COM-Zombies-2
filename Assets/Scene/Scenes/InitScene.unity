@@ -206,7 +206,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 24}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.125, y: -0.125, z: 0}
+  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 28}
@@ -262,8 +262,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 0.9999523
-    height: 1
+    width: 0.33333334
+    height: 0.5327414
   near clip plane: -128
   far clip plane: 128
   field of view: 60
@@ -528,8 +528,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 2327
-    height: 1309
+    width: 640
+    height: 480
 --- !u!1 &1486866191
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,7 +540,7 @@ GameObject:
   - component: {fileID: 1486866193}
   - component: {fileID: 1486866192}
   m_Layer: 0
-  m_Name: CursorLock
+  m_Name: PC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,9 +554,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1486866191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 468c3a09de8706f4aa380f2534751434, type: 3}
+  m_Script: {fileID: 11500000, guid: bf9280cd89d5b6a45bc6c23e912c7859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
+  isCursorLocked: 0
+  pausedFromFocusLoss: 0
+  pausePanel: {fileID: 0}
+  quitButton: {fileID: 0}
 --- !u!4 &1486866193
 Transform:
   m_ObjectHideFlags: 0

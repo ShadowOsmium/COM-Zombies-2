@@ -198,7 +198,8 @@ public class UILotteryController : UISceneController
 		lottery_bar_rect.Size = new Vector2(x, 20f);
 		lottery_bar_rect.NeedUpdate = true;
 		lottery_bar.NeedUpdate = true;
-		lottery_bar_label.Text = "Free Spins:" + num;
+		lottery_bar_label.Text = "Spin 5 Times To Refresh The Board And Get 30 Crystals: " + num + " Out Of 5";
+
 	}
 
 	private void OnTapJoyPointsAdd()

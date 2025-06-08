@@ -14,6 +14,7 @@ public static class EncryptUtils
         {
             aesAlg.Key = Key;
             aesAlg.IV = IV;
+
             using (MemoryStream msEncrypt = new MemoryStream())
             using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
             using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
@@ -31,7 +32,9 @@ public static class EncryptUtils
         {
             aesAlg.Key = Key;
             aesAlg.IV = IV;
-            using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
+
+            byte[] buffer = Convert.FromBase64String(cipherText);
+            using (MemoryStream msDecrypt = new MemoryStream(buffer))
             using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Read))
             using (StreamReader srDecrypt = new StreamReader(csDecrypt))
             {

@@ -30,7 +30,9 @@ public class EnemyController : ObjectController
 
 	public string ANI_HALF_HP = string.Empty;
 
-	public EnemyState SHOW_STATE;
+    public EnemyType type = EnemyType.E_NONE;
+
+    public EnemyState SHOW_STATE;
 
 	public EnemyState IDLE_STATE;
 
@@ -52,7 +54,9 @@ public class EnemyController : ObjectController
 
 	public EnemyState CHAISAW_INJURED_STATE;
 
-	public EnemyState HALF_HP_STATE;
+    public EnemyType enemyType;
+
+    public EnemyState HALF_HP_STATE;
 
 	public EnemyState FROZEN_STATE;
 
@@ -1346,7 +1350,7 @@ public class EnemyController : ObjectController
 		Camera.main.transform.localPosition = Vector3.zero;
 		Camera.main.transform.localRotation = Quaternion.identity;
 		GameSceneController.Instance.main_camera.camera_pause = true;
-		if (enemy_data.enemy_type == EnemyType.E_FATCOOK)
+		if (enemy_data.enemy_type == EnemyType.E_FATCOOK || enemy_data.enemy_type == EnemyType.E_FATCOOK_E)
 		{
 			GameSceneController.Instance.main_camera.StartShake("Boss_FatCook_Camera_Death01");
 		}
@@ -1354,7 +1358,7 @@ public class EnemyController : ObjectController
 		{
 			GameSceneController.Instance.main_camera.StartShake("Haoke_Camera_Death01");
 		}
-		else if (enemy_data.enemy_type == EnemyType.E_WRESTLER || enemy_data.enemy_type == EnemyType.E_HALLOWEEN || enemy_data.enemy_type == EnemyType.E_SHARK)
+		else if (enemy_data.enemy_type == EnemyType.E_WRESTLER || enemy_data.enemy_type == EnemyType.E_WRESTLER_E || enemy_data.enemy_type == EnemyType.E_HALLOWEEN || enemy_data.enemy_type == EnemyType.E_HALLOWEEN_E || enemy_data.enemy_type == EnemyType.E_SHARK || enemy_data.enemy_type == EnemyType.E_SHARK_E)
 		{
 			GameSceneController.Instance.main_camera.StartShake("Boss_FatCook_Camera_Death01");
 		}

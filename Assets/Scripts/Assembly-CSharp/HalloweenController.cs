@@ -23,7 +23,9 @@ public class HalloweenController : EnemyController
 
 	public EnemyState SKILL_WINDSWORD_STATE;
 
-	private float injured_val_state;
+    private BossCoopMissionController coopMission;
+
+    private float injured_val_state;
 
 	private float injured_val_percent;
 
@@ -97,7 +99,8 @@ public class HalloweenController : EnemyController
 			}
 			CreateHpBar(Vector3.up * 3.4f);
 		}
-		Invoke("PlayGroundStone", time);
+        coopMission = GameSceneController.Instance.mission_controller as BossCoopMissionController;
+        Invoke("PlayGroundStone", time);
 		base.Init();
 		SKILL_REPLICATION_STATE = EnemyState.Create(EnemyStateType.HalloweenReplication, this);
 		SKILL_WINDSWORD_STATE = EnemyState.Create(EnemyStateType.HalloweenWindSword, this);
@@ -435,13 +438,21 @@ public class HalloweenController : EnemyController
 		eff_bellow.Stop();
 	}
 
-	public void OnReplicationCast()
-	{
-		Debug.Log("OnReplicationCast...");
-		GameSceneController.Instance.HalloweenSummon();
-	}
+    public void OnReplicationCast()
+    {
+        Debug.Log("OnReplicationCast...");
 
-	private void PlayGroundStone()
+        if (coopMission != null)
+        {
+            coopMission.StartCoroutine(coopMission.HalloweenSummon());
+        }
+        else
+        {
+            Debug.LogWarning("coopMission was null, summon skipped.");
+        }
+    }
+
+    private void PlayGroundStone()
 	{
 		ground_stone1 = Object.Instantiate(base.Accessory[0], base.transform.position, base.transform.rotation) as GameObject;
 		ground_stone2 = Object.Instantiate(base.Accessory[1], base.transform.position, base.transform.rotation) as GameObject;

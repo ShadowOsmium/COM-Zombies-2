@@ -15,7 +15,7 @@ public class GameInitUIController : MonoBehaviour
 		OpenClikPlugin.Initialize("A36F6C65-C1E3-47D4-AD07-AA8A6C90132C");
 		yield return 1;
 		yield return 1;
-//		Handheld.PlayFullScreenMovie("GameStory.mp4", Color.black, FullScreenMovieControlMode.CancelOnInput, FullScreenMovieScalingMode.AspectFit);
+		Handheld.PlayFullScreenMovie("GameStory.mp4", Color.black, FullScreenMovieControlMode.CancelOnInput, FullScreenMovieScalingMode.AspectFit);
 		yield return 1;
 		PushNotification.ReSetNotifications();
 		yield return 1;

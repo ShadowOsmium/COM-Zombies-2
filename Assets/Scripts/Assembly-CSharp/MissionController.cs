@@ -71,17 +71,17 @@ public class MissionController : MonoBehaviour
 		float x = Random.Range((0f - grave.transform.localScale.x) / 2f, grave.transform.localScale.x / 2f);
 		float z = Random.Range((0f - grave.transform.localScale.z) / 2f, grave.transform.localScale.z / 2f);
 		Vector3 vector = grave.transform.position + new Vector3(x, 0f, z);
-		if (type == EnemyType.E_CROW)
-		{
-			if (Application.loadedLevelName != "test_new1")
-			{
-				StartCoroutine(EnemyFactory.CreateEnemy(type, GameSceneController.Instance.way_points[0].transform.position, Quaternion.identity));
-			}
-		}
-		else
-		{
-			StartCoroutine(EnemyFactory.CreateEnemy(type, vector, Quaternion.identity));
-			if (type != EnemyType.E_FATCOOK && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial)
+        if (type == EnemyType.E_CROW)
+        {
+            if (Application.loadedLevelName != "test_new1")
+            {
+                StartCoroutine(EnemyFactory.CreateEnemy(type, GameSceneController.Instance.way_points[0].transform.position, Quaternion.identity));
+            }
+        }
+        else
+        {
+            StartCoroutine(EnemyFactory.CreateEnemy(type, vector, Quaternion.identity));
+            if (type != EnemyType.E_FATCOOK && (type != EnemyType.E_FATCOOK_E && type != EnemyType.E_HAOKE_A && type != EnemyType.E_HAOKE_B && GameData.Instance.cur_quest_info.mission_type != MissionType.Tutorial))
 			{
 				GameSceneController.Instance.ground_stone_pool.GetComponent<ObjectPool>().CreateObject(vector, Quaternion.identity);
 			}

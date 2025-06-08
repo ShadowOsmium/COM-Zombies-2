@@ -189,7 +189,8 @@ public class GameConfig : MonoBehaviour
 		Object.DontDestroyOnLoad(base.gameObject);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_COMMIS);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_BOOMER_TIMER);
-		Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE);
+        Skill_Enchant_Monster_List.Add(EnemyType.E_BOOMER_TIMER_E);
+        Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_NURSE);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_BOOMER);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_CLOWN);
@@ -561,17 +562,17 @@ public class GameConfig : MonoBehaviour
 		foreach (XmlElement item in documentElement.GetElementsByTagName("Boss"))
 		{
 			CoopBossCfg coopBossCfg = new CoopBossCfg();
-			coopBossCfg.boss_name = item.GetAttribute("name");
+			coopBossCfg.boss_name = item.GetAttribute("codename");
 			coopBossCfg.boss_show_name = item.GetAttribute("showName");
 			coopBossCfg.boss_type = GetEnemyTypeFromCfg(coopBossCfg.boss_name);
 			coopBossCfg.day_level = int.Parse(item.GetAttribute("day"));
 			coopBossCfg.hp_capacity = float.Parse(item.GetAttribute("hp")) / 4;
-			coopBossCfg.damage_base = float.Parse(item.GetAttribute("damageBase"));
+			coopBossCfg.damage_base = float.Parse(item.GetAttribute("damage"));
 			coopBossCfg.reward_gold = int.Parse(item.GetAttribute("rewardGold"));
 			coopBossCfg.reward_crystal = int.Parse(item.GetAttribute("rewardCrystal"));
 			coopBossCfg.reward_weapon = item.GetAttribute("rewardsWeapon");
-			coopBossCfg.reward_gold_failed = int.Parse(item.GetAttribute("rewardGoldFaile"));
-			string attribute = item.GetAttribute("rewardsWeaponFragments");
+			coopBossCfg.reward_gold_failed = int.Parse(item.GetAttribute("lose"));
+			string attribute = item.GetAttribute("rewardsWeaponParts");
 			string[] array = attribute.Split('|');
 			for (int i = 0; i < array.Length; i++)
 			{
@@ -617,7 +618,7 @@ public class GameConfig : MonoBehaviour
 			{
 				avatarConfig.avatar_worth_2 = int.Parse(item.GetAttribute("worth2"));
 			}
-			if (item.HasAttribute("unlockDay"))
+            if (item.HasAttribute("unlockDay"))
 			{
 				avatarConfig.unlockDay = int.Parse(item.GetAttribute("unlockDay"));
 			}
@@ -659,11 +660,11 @@ public class GameConfig : MonoBehaviour
 			playerComboBuff.rate_ratio = float.Parse(item4.GetAttribute("RateRatio"));
 			Player_Combo_Buff_Info[key2] = playerComboBuff;
 		}
-		XmlElement xmlElement5 = documentElement.GetElementsByTagName("GameInitMoney")[0] as XmlElement;
+		XmlElement xmlElement5 = documentElement.GetElementsByTagName("GameInitCurrency")[0] as XmlElement;
 		init_cash = int.Parse(xmlElement5.GetAttribute("cash"));
 		init_crystal = int.Parse(xmlElement5.GetAttribute("crystal"));
 		init_voucher = int.Parse(xmlElement5.GetAttribute("voucher"));
-		XmlElement xmlElement6 = documentElement.GetElementsByTagName("RebirthGod")[0] as XmlElement;
+		XmlElement xmlElement6 = documentElement.GetElementsByTagName("Rebirth")[0] as XmlElement;
 		rebirth_god_time = float.Parse(xmlElement6.GetAttribute("time"));
 		xmlElement6 = documentElement.GetElementsByTagName("AvatarHpCfg")[0] as XmlElement;
 		Avatar_Hp_Up_Info.ParaA = float.Parse(xmlElement6.GetAttribute("ParaA"));
@@ -909,13 +910,19 @@ public class GameConfig : MonoBehaviour
 		cash_package_val = int.Parse(xmlElement4.GetAttribute("val"));
 	}
 
-	public void LoadMainQuestConfig()
-	{
-		string xml = LoadConfigFile("MainQuestCfg");
-		XmlDocument xmlDocument = new XmlDocument();
-		xmlDocument.LoadXml(xml);
-		XmlElement documentElement = xmlDocument.DocumentElement;
-		foreach (XmlElement item in documentElement.GetElementsByTagName("MainQuest"))
+    public void LoadMainQuestConfig()
+    {
+        string xml = LoadConfigFile("MainQuestCfg");
+        if (string.IsNullOrEmpty(xml) || xml.Trim().Length == 0)
+        {
+            Debug.LogError("MainQuestCfg XML content is empty or null!");
+            return;
+        }
+
+        XmlDocument xmlDocument = new XmlDocument();
+        xmlDocument.LoadXml(xml);
+        XmlElement documentElement = xmlDocument.DocumentElement;
+        foreach (XmlElement item in documentElement.GetElementsByTagName("MainQuest"))
 		{
 			int key = int.Parse(item.GetAttribute("level"));
 			QuestInfo questInfo = new QuestInfo();
@@ -1083,6 +1090,9 @@ public class GameConfig : MonoBehaviour
 		case "BoomerTimer":
 			result = EnemyType.E_BOOMER_TIMER;
 			break;
+        case "BoomerTimer_E":
+			result = EnemyType.E_BOOMER_TIMER_E;
+			break;
 		case "Crow":
 			result = EnemyType.E_CROW;
 			break;
@@ -1095,7 +1105,10 @@ public class GameConfig : MonoBehaviour
 		case "FatCook":
 			result = EnemyType.E_FATCOOK;
 			break;
-		case "Haoke_A":
+        case "FatCook_E":
+            result = EnemyType.E_FATCOOK_E;
+            break;
+        case "Haoke_A":
 			result = EnemyType.E_HAOKE_A;
 			break;
 		case "Haoke_B":
@@ -1104,14 +1117,23 @@ public class GameConfig : MonoBehaviour
 		case "Wrestler":
 			result = EnemyType.E_WRESTLER;
 			break;
+        case "Wrestler_E":
+			result = EnemyType.E_WRESTLER_E;
+			break;
 		case "Halloween":
 			result = EnemyType.E_HALLOWEEN;
+			break;
+        case "Halloween_E":
+			result = EnemyType.E_HALLOWEEN_E;
 			break;
 		case "HalloweenSub":
 			result = EnemyType.E_HALLOWEEN_SUB;
 			break;
 		case "Shark":
 			result = EnemyType.E_SHARK;
+			break;
+        case "Shark_E":
+			result = EnemyType.E_SHARK_E;
 			break;
 		}
 		return result;
@@ -1624,14 +1646,26 @@ public class GameConfig : MonoBehaviour
 		case CoopBossType.E_FATCOOK:
 			result = EnemyType.E_FATCOOK;
 			break;
+        case CoopBossType.E_FATCOOK_E:
+			result = EnemyType.E_FATCOOK_E;
+			break;
 		case CoopBossType.E_HAOKE_A:
 			result = EnemyType.E_HAOKE_A;
 			break;
-		case CoopBossType.E_WRESTLER:
+        case CoopBossType.E_HAOKE_B:
+            result = EnemyType.E_HAOKE_B;
+            break;
+        case CoopBossType.E_WRESTLER:
 			result = EnemyType.E_WRESTLER;
+			break;
+        case CoopBossType.E_WRESTLER_E:
+			result = EnemyType.E_WRESTLER_E;
 			break;
 		case CoopBossType.E_HALLOWEEN:
 			result = EnemyType.E_HALLOWEEN;
+			break;
+        case CoopBossType.E_HALLOWEEN_E:
+			result = EnemyType.E_HALLOWEEN_E;
 			break;
 		case CoopBossType.E_SHARK:
 			result = EnemyType.E_SHARK;

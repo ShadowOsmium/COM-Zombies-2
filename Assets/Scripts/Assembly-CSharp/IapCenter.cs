@@ -343,32 +343,32 @@ public class IapCenter : MonoBehaviour
 		return result;
 	}
 
-	public static int GetIapCrystalCount(IapIdName id_name)
-	{
-		int result = 0;
-		switch (id_name)
-		{
-		case IapIdName.Cent99:
-			result = 25;
-			break;
-		case IapIdName.Cent499:
-			result = 150;
-			break;
-		case IapIdName.Cent999:
-			result = 350;
-			break;
-		case IapIdName.Cent1999:
-			result = 800;
-			break;
-		case IapIdName.Cent4999:
-			result = 2500;
-			break;
-		case IapIdName.Cent9999:
-			result = 6200;
-			break;
-		}
-		return result;
-	}
+	//public static int GetIapCrystalCount(IapIdName id_name)
+	//{
+	//	int result = 0;
+	//	switch (id_name)
+	//	{
+	//	case IapIdName.Cent99:
+	//		result = 0;
+	//		break;
+	//	case IapIdName.Cent499:
+	//		result = 0;
+	//		break;
+	//	case IapIdName.Cent999:
+	//		result = 0;
+	//		break;
+	//	case IapIdName.Cent1999:
+	//		result = 0;
+	//		break;
+	//	case IapIdName.Cent4999:
+	//		result = 0;
+	//		break;
+	//	case IapIdName.Cent9999:
+	//		result = 0;
+	//		break;
+	//	}
+	//	return result;
+	//}
 
 	public void NowPurchaseProduct(IapIdName id_name, string productCount, OnPurchaseSucess on_sucess, OnPurchaseError on_error, OnPurchaseCancel on_cancel)
 	{
@@ -436,10 +436,10 @@ public class IapCenter : MonoBehaviour
 
 	private void OnPurchaseSucess()
 	{
-		int iapCrystalCount = GetIapCrystalCount(cur_iap_id);
-		GameData.Instance.total_crystal += iapCrystalCount;
+		//int iapCrystalCount = GetIapCrystalCount(cur_iap_id);
+		//GameData.Instance.total_crystal += iapCrystalCount;
 		Hashtable hashtable = new Hashtable();
-		hashtable.Add("tCrystalNum", iapCrystalCount);
+		//hashtable.Add("tCrystalNum", iapCrystalCount);
 		GameData.Instance.UploadStatistics("IAP_Buy_" + cur_iap_id, hashtable);
 	}
 

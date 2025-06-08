@@ -56,7 +56,7 @@ public class BossRoamEvent : MonoBehaviour, IRoamEvent
 	private void OnBossSpawn()
 	{
 		int num = Random.Range(0, 100) % 2;
-		if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_FATCOOK)
+		if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_FATCOOK || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_FATCOOK_E)
 		{
 			if (num == 0)
 			{
@@ -69,7 +69,7 @@ public class BossRoamEvent : MonoBehaviour, IRoamEvent
 				cur_show_pos = fat_show2_pos;
 			}
 		}
-		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HAOKE_A || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HAOKE_B)
+        else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HAOKE_A || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HAOKE_B)
 		{
 			if (num == 0)
 			{
@@ -82,7 +82,7 @@ public class BossRoamEvent : MonoBehaviour, IRoamEvent
 				cur_show_pos = haoke_show2_pos;
 			}
 		}
-		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_WRESTLER)
+		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_WRESTLER || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_WRESTLER_E)
 		{
 			if (num == 0)
 			{
@@ -95,7 +95,7 @@ public class BossRoamEvent : MonoBehaviour, IRoamEvent
 				cur_show_pos = wrestler_show2_pos;
 			}
 		}
-		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HALLOWEEN)
+		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HALLOWEEN || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_HALLOWEEN_E)
 		{
 			if (num == 0)
 			{
@@ -108,7 +108,7 @@ public class BossRoamEvent : MonoBehaviour, IRoamEvent
 				cur_show_pos = halloween_show2_pos;
 			}
 		}
-		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_SHARK)
+		else if (GameData.Instance.cur_quest_info.boss_type == EnemyType.E_SHARK || GameData.Instance.cur_quest_info.boss_type == EnemyType.E_SHARK_E)
 		{
 			if (num == 0)
 			{

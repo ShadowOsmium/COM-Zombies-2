@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Avatar_Mike_1
-  m_Shader: {fileID: 4800000, guid: a164aaf3b22805f4291c6408861e512e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4bcfa2c19bbd89c498e445ba57c33cb1, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0

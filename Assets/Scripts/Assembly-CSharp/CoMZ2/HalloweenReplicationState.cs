@@ -6,27 +6,34 @@ namespace CoMZ2
 	{
 		protected HalloweenController halloween;
 
-		public override void DoStateLogic(float deltaTime)
-		{
-			if (AnimationUtil.IsAnimationPlayedPercentage(halloween.gameObject, halloween.ANI_REPLICATION_01, 1f))
-			{
-				halloween.SetState(halloween.IDLE_STATE);
-			}
-		}
+        private bool hasCast = false;
+        public override void DoStateLogic(float deltaTime)
+        {
+            if (!hasCast && AnimationUtil.IsAnimationPlayedPercentage(halloween.gameObject, halloween.ANI_REPLICATION_01, 0.5f))
+            {
+                halloween.OnReplicationCast();
+                hasCast = true;
+            }
 
-		public override void OnEnterState()
-		{
-			if (halloween == null)
-			{
-				halloween = m_enemy as HalloweenController;
-			}
-			halloween.SetPathCatchState(false);
-			AnimationUtil.CrossAnimate(halloween.gameObject, halloween.ANI_REPLICATION_01, WrapMode.ClampForever);
-			halloween.replication_enable = false;
-			halloween.OnReplicationCast();
-		}
+            if (AnimationUtil.IsAnimationPlayedPercentage(halloween.gameObject, halloween.ANI_REPLICATION_01, 1f))
+            {
+                halloween.SetState(halloween.IDLE_STATE);
+            }
+        }
 
-		public override void OnExitState()
+        public override void OnEnterState()
+        {
+            if (halloween == null)
+            {
+                halloween = m_enemy as HalloweenController;
+            }
+            hasCast = false;
+            halloween.SetPathCatchState(false);
+            AnimationUtil.CrossAnimate(halloween.gameObject, halloween.ANI_REPLICATION_01, WrapMode.ClampForever);
+            halloween.replication_enable = false;
+        }
+
+        public override void OnExitState()
 		{
 		}
 	}

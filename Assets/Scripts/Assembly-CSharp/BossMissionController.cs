@@ -157,29 +157,29 @@ public class BossMissionController : MissionController
 		return EnemyFactory.CreateEnemyGetEnemyController(type, nest.transform.position, nest.transform.rotation);
 	}
 
-	public IEnumerator FatcookSummon()
-	{
-		GameObject grave;
-		if (boss != null)
-		{
-			grave = FindClosedGrave(boss.transform.position);
-		}
-		else
-		{
-			PlayerController player = GameSceneController.Instance.player_controller;
-			grave = FindClosedGrave(player.transform.position);
-		}
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-		SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
-		yield return 1;
-	}
+    public IEnumerator FatcookSummon()
+    {
+        GameObject grave;
+        if (boss != null)
+        {
+            grave = FindClosedGrave(boss.transform.position);
+        }
+        else
+        {
+            PlayerController player = GameSceneController.Instance.player_controller;
+            grave = FindClosedGrave(player.transform.position);
+        }
 
-	public IEnumerator HalloweenSummon()
+        int summonCount = (boss != null && boss.enemyType == EnemyType.E_FATCOOK_E) ? 8 : 4;
+
+        for (int i = 0; i < summonCount; i++)
+        {
+            SpwanZombiesFromGrave(EnemyType.E_BOOMER_TIMER, grave);
+            yield return 1;  // yield after each spawn, same as original
+        }
+    }
+
+    public IEnumerator HalloweenSummon()
 	{
 		GameObject grave;
 		if (boss != null)
