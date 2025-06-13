@@ -1,17 +1,65 @@
-READ THIS FOR DOWNLOAD INSTRUCTIONS
+# COM-Zombies 2 Overhauled Edition | By Nick 
 
-1.) Find the releases tab on GitHub. PC is the first image and Android is the second image. (Scroll down to the very bottom on mobile to find where the screenshot came from on the repository)
+![Game](https://github.com/user-attachments/assets/ad67eb40-a19c-445e-b925-b559d25f1b3e)
 
-![image](https://github.com/user-attachments/assets/4abb886f-b50a-4daa-9a9f-989d35af1457)
+![Android](https://img.shields.io/badge/Platform-Android-green?logo=android&style=flat-square)
+![Windows](https://img.shields.io/badge/Platform-Windows-blue?logo=windows&style=flat-square)
+![Release](https://img.shields.io/badge/Release-v1.3-orange?style=flat-square)
+![Next Release](https://img.shields.io/badge/Next--Up-v1.4-yellow?style=flat-square)
 
-![image](https://github.com/user-attachments/assets/318dd54d-fa88-48c9-ac5c-2520a6b9f9f6)
+## What is this mod about?
 
-2.) Click on this download if you are an android player (If not, skip to step 3) |  Android.COMZ2.Rebalanced.apk
+This mod aims to be the best rebalance and content mod for all types of players! Once you sink into the game, you won’t want to return to the original. 
+The following changes are eihter current or future changes.
 
-3.) Click on this download if you are a pc player |  PC.COMZ2.Rebalanced.zip
+## 🔧 What has changed in this mod?
 
-4.) For PC, extact the .zip file with any file manager (For Android You Can Skip All Of The Next Steps As You Can Just Click On The File And It Will Install)
+| Feature                          | Original                         | My Mod                                                      |
+|---------------------------------|---------------------------------|-------------------------------------------------------------|
+| Boss Raid              | Somewhat Not Great Rewards              | More Rewarding And Elite Variants For All Bosses                                             |
+| Mission                     | Days Were Too Easy           | Somewhat Difficult But Balanced, While Also Adding Variation And Scrapped Mission Types                             |
+| Weapons                   | Super Unbalanced And Expensive/Too Cheap | Prices Rebalanced And Rebalanced Guns                                     |
+| Skills                   | Super Weak/Too Strong | Prices Rebalanced And Rebalanced Skill Upgrades And Pricing                                     |
+| Leveling Up Characters        | Level 30 Max Upgrades                 | Level 60 Max Upgrades                     |      |
+| UI                          | Original                      | Enhanced Main Menu Look                                      |
+| Controls                    | Manual                      | Smoother PC Controls                                        |
+| Bugs & Typos               | A Lot Of Bugs                 | Fixed A Lot Of Bugs Triniti Didn't                                                  |
+| Textures                   | Original                     | Redone Most To Look Better         |
 
-5.) After extracting the file, you can then place that where ever you would like and then just run the .exe file
+---
 
-6.) After you have ran the exe file, it will boot up and you can now enjoy the mod! (For the other mods/recomps, repeat the steps above)
+## 🚀 Installation Instructions
+
+### Android
+
+1. Download the latest APK from the [Releases](https://github.com/ShadowOsmium/COM-Zombies-2/releases/latest) page — file:   
+   `COMZ2.apk`
+2. Allow installation from unknown sources on your Android device if needed.
+3. Open the APK to install the game.
+4. Launch and enjoy hunting dinos on the go!
+
+### PC (Windows)
+
+1. Download the latest PC Release from the [Releases](https://github.com/ShadowOsmium/COM-Zombies-2/releases/latest) page — file:   
+   `COMZ2.zip`
+2. Extract the ZIP file to your preferred folder.
+3. Run the executable inside to start the game.
+4. Have fun playing on your PC!
+
+---
+
+## 🎮 Gameplay Controls
+
+### Android
+
+- Use touchscreen controls and on-screen buttons.  
+
+### PC (Windows)
+
+- **Move:** WASD  
+- **Shoot:** Left Mouse Button  
+- **Lock Cursor:** Right Click To Enforce It (Mostly Automatic)  
+- **Pause/Menu:** Esc key  
+- **Ability:** Num 1
+
+---
