@@ -55,21 +55,21 @@ public class UIShopSubWeaponPanelController : UIShopPanelController
 		yield return 0;
 	}
 
-	public override void Show()
-	{
-		base.Show();
-		ChangeMask("Mask");
-		if (ScrollerObjList.childCount <= 0)
-		{
-			string primary_equipment = UIShopSceneController.Instance.CurrentAvatar.avatarData.primary_equipment;
-			currentWeapon = GameData.Instance.WeaponData_Set[primary_equipment];
-			weaponList = GameData.Instance.GetSecondaryWeaponsFor(currentWeapon.owner);
-			StartCoroutine(CreateWeaponScalerObj());
-			UpdateWeaponInfo();
-		}
-	}
+    public override void Show()
+    {
+        base.Show();
+        ChangeMask("Mask");
+        if (ScrollerObjList.childCount <= 0)
+        {
+            string primary_equipment = UIShopSceneController.Instance.CurrentAvatar.avatarData.primary_equipment;
+            currentWeapon = GameData.Instance.WeaponData_Set[primary_equipment];
+            weaponList = GameData.Instance.GetSecondaryWeaponsFor(currentWeapon.owner);
+            StartCoroutine(CreateWeaponScalerObj());
+            UpdateWeaponInfo();
+        }
+    }
 
-	public override void Hide(bool isPopFromStack)
+    public override void Hide(bool isPopFromStack)
 	{
 		base.Hide(isPopFromStack);
 		if (isPopFromStack)
@@ -98,7 +98,7 @@ public class UIShopSubWeaponPanelController : UIShopPanelController
 		}
 		else
 		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
+			//UISceneController.Instance.MoneyController.IapPanel.Show();
 		}
 		Object.Destroy(msgBox.gameObject);
 	}

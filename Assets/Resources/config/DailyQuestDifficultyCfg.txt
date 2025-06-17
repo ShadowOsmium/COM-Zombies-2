@@ -1,7 +1,7 @@
 <DailyQuestDifficultyCfg>
 
   <!--DailyQuestPrice-->
-  <DailyQuestPrice easyPrice1="0" easyPrice2="0" hardPrice1="10" hardPrice2="10" cdPrice="5" />
+  <DailyQuestPrice easyPrice1="0" easyPrice2="0" hardPrice1="20" hardPrice2="20" cdPrice="5" />
   
   <DailyQuestHpDifficulty levelRange="1" hpN="1" hpParaA="4" hpParaB="2.89" />
   <DailyQuestHpDifficulty levelRange="10" hpN="10" hpParaA="30" hpParaB="13.5" />

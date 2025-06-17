@@ -1511,7 +1511,7 @@ public class EnemyController : ObjectController
 	{
 		if (!IsEnchant)
 		{
-			Debug.Log("RemoteEnchantMonster");
+			//Debug.Log("RemoteEnchantMonster");
 			is_enchant = true;
 			base.gameObject.layer = PhysicsLayer.NPC;
 			hatred_set.Clear();
@@ -1627,7 +1627,12 @@ public class EnemyController : ObjectController
 		IsBoss = true;
 		enemy_data.cur_hp = (enemy_data.hp_capacity = boss_cfg.hp_capacity);
 		enemy_data.damage_val = boss_cfg.damage_base;
-	}
+        BossCoopMissionController missionController = GameSceneController.Instance.mission_controller as BossCoopMissionController;
+        if (missionController != null)
+        {
+            missionController.SetBoss(this);
+        }
+    }
 
 	public void CreateHpBar(Vector3 pos)
 	{

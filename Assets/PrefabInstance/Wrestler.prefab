@@ -1552,7 +1552,7 @@ Animation:
   - {fileID: 7400000, guid: 70ce2744950a20a42a5af482fd3cb05f, type: 2}
   - {fileID: 7400000, guid: dd54d1cd15a61a448b8af3fca2c3e0a5, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!111 &111689637676155848
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a70ba85df93b63479f7ec5814314823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy_type: 17
+  enemy_type: 19
 --- !u!114 &114712803350738458
 MonoBehaviour:
   m_ObjectHideFlags: 1

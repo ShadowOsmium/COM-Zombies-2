@@ -32,7 +32,7 @@ public class AvatarConfig
 
 	public AvatarExistState exist_state;
 
-	public string secondary_equipment = "None";
+	//public string secondary_equipment = "None";
 
 	public string first_skill = "None";
 

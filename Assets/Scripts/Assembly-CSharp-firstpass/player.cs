@@ -56,7 +56,7 @@ public class player : MonoBehaviour
 		{
 			cmrToPlayerDis = (cmr.transform.position - cameraAimTrs.position).magnitude;
 		}
-		Screen.lockCursor = true;
+		//Screen.lockCursor = true;
 	}
 
 	private void OnHit()

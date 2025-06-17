@@ -5,89 +5,77 @@ public class EnemyFactory : MonoBehaviour
 {
 	protected static EnemyFactory instance;
 
-	public EnemyFactory Instance
-	{
-		get
-		{
-			if (instance == null)
-			{
-				GameObject.CreatePrimitive(PrimitiveType.Cube);
-			}
-			return instance;
-		}
-	}
+    public static EnemyFactory Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                var go = new GameObject("EnemyFactory");
+                instance = go.AddComponent<EnemyFactory>();
+            }
+            return instance;
+        }
+    }
 
-	public static IEnumerator CreateEnemy(EnemyType type, Vector3 pos, Quaternion rot)
-	{
-		GameObject enemy_ref = GameSceneController.Instance.enemy_ref_map.Enemy_Set[type];
-		yield return 1;
-		GameObject enemy = Object.Instantiate(enemy_ref.GetComponent<SinglePrefabReference>().Instance, pos, rot) as GameObject;
-		yield return 1;
-		EnemyController eController = Utility.AddEnemyComponent(enemy, GetEnemyTypeControllerName(type));
-		EnemyData data = EnemyData.CreateData(GameConfig.Instance.EnemyConfig_Set[type]);
-		eController.SetEnemyData(data);
-		eController.EnemyID = GameSceneController.Instance.EnemyIndex;
-		eController.Accessory = enemy_ref.GetComponent<SinglePrefabReference>().Accessory;
-		eController.is_traped = false;
-		enemy.name = "Enemy_" + eController.EnemyID;
-		enemy.GetComponent<EnemyAnimationEvent>().SetController(eController);
-		GameSceneController.Instance.OnEnemySpawn(data);
-		yield return 1;
-		GameSceneController.Instance.Enemy_Set.Add(eController.EnemyID, eController);
-	}
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
-	public static EnemyController CreateRemoteEnemy(EnemyType type, Vector3 pos, Quaternion rot, int enemy_id, bool is_boss = false)
-	{
-		GameObject gameObject = GameSceneController.Instance.enemy_ref_map.Enemy_Set[type];
-		GameObject gameObject2 = Object.Instantiate(gameObject.GetComponent<SinglePrefabReference>().Instance, pos, rot) as GameObject;
-		EnemyController enemyController = Utility.AddEnemyComponent(gameObject2, GetEnemyTypeControllerName(type));
-		EnemyData enemyData = EnemyData.CreateData(GameConfig.Instance.EnemyConfig_Set[type]);
-		enemyController.SetEnemyData(enemyData);
-		enemyController.EnemyID = enemy_id;
-		enemyController.Accessory = gameObject.GetComponent<SinglePrefabReference>().Accessory;
-		enemyController.is_traped = false;
-		gameObject2.name = "Enemy_" + enemyController.EnemyID;
-		gameObject2.GetComponent<EnemyAnimationEvent>().SetController(enemyController);
-		GameSceneController.Instance.OnEnemySpawn(enemyData);
-		GameSceneController.Instance.Enemy_Set.Add(enemyController.EnemyID, enemyController);
-		GameSceneController.Instance.EnemyIndex = enemy_id + 1;
-		return enemyController;
-	}
+    private static EnemyController CreateEnemyInternal(
+        EnemyType type, Vector3 pos, Quaternion rot,
+        int? enemyID = null, bool isTrapped = false)
+    {
+        GameObject enemyRef = GameSceneController.Instance.enemy_ref_map.Enemy_Set[type];
+        GameObject enemyInstance = Object.Instantiate(enemyRef.GetComponent<SinglePrefabReference>().Instance, pos, rot);
+        EnemyController controller = Utility.AddEnemyComponent(enemyInstance, GetEnemyTypeControllerName(type));
+        EnemyData data = EnemyData.CreateData(GameConfig.Instance.EnemyConfig_Set[type]);
+        controller.SetEnemyData(data);
+        controller.EnemyID = enemyID ?? GameSceneController.Instance.EnemyIndex;
+        controller.Accessory = enemyRef.GetComponent<SinglePrefabReference>().Accessory;
+        controller.is_traped = isTrapped;
+        enemyInstance.name = "Enemy_" + controller.EnemyID;
+        enemyInstance.GetComponent<EnemyAnimationEvent>().SetController(controller);
+        GameSceneController.Instance.Enemy_Set.Add(controller.EnemyID, controller);
+        GameSceneController.Instance.OnEnemySpawn(data);
+        Debug.Log("Created enemy of type " + type + " at position: " + pos.ToString());
+        if (!enemyID.HasValue)
+            GameSceneController.Instance.EnemyIndex++;
 
-	public static EnemyController CreateEnemyGetEnemyController(EnemyType type, Vector3 pos, Quaternion rot)
-	{
-		GameObject gameObject = GameSceneController.Instance.enemy_ref_map.Enemy_Set[type];
-		GameObject gameObject2 = Object.Instantiate(gameObject.GetComponent<SinglePrefabReference>().Instance, pos, rot) as GameObject;
-		EnemyController enemyController = Utility.AddEnemyComponent(gameObject2, GetEnemyTypeControllerName(type));
-		EnemyData enemyData = EnemyData.CreateData(GameConfig.Instance.EnemyConfig_Set[type]);
-		enemyController.SetEnemyData(enemyData);
-		enemyController.EnemyID = GameSceneController.Instance.EnemyIndex;
-		enemyController.Accessory = gameObject.GetComponent<SinglePrefabReference>().Accessory;
-		enemyController.is_traped = false;
-		gameObject2.name = "Enemy_" + enemyController.EnemyID;
-		gameObject2.GetComponent<EnemyAnimationEvent>().SetController(enemyController);
-		GameSceneController.Instance.Enemy_Set.Add(enemyController.EnemyID, enemyController);
-		GameSceneController.Instance.OnEnemySpawn(enemyData);
-		return enemyController;
-	}
+        return controller;
+    }
 
-	public static EnemyController CreateEnemyForTrap(EnemyType type, Vector3 pos)
-	{
-		GameObject gameObject = GameSceneController.Instance.enemy_ref_map.Enemy_Set[type];
-		GameObject gameObject2 = Object.Instantiate(gameObject.GetComponent<SinglePrefabReference>().Instance, pos, Quaternion.identity) as GameObject;
-		EnemyController enemyController = Utility.AddEnemyComponent(gameObject2, GetEnemyTypeControllerName(type));
-		EnemyData enemyData = EnemyData.CreateData(GameConfig.Instance.EnemyConfig_Set[type]);
-		enemyController.SetEnemyData(enemyData);
-		enemyController.EnemyID = GameSceneController.Instance.EnemyIndex;
-		enemyController.Accessory = gameObject.GetComponent<SinglePrefabReference>().Accessory;
-		enemyController.is_traped = true;
-		gameObject2.name = "Enemy_" + enemyController.EnemyID;
-		gameObject2.GetComponent<EnemyAnimationEvent>().SetController(enemyController);
-		GameSceneController.Instance.Enemy_Set.Add(enemyController.EnemyID, enemyController);
-		return enemyController;
-	}
+    public static IEnumerator CreateEnemy(EnemyType type, Vector3 pos, Quaternion rot)
+    {
+        yield return 1;
+        EnemyController enemy = CreateEnemyInternal(type, pos, rot);
+        yield return 1;
+    }
 
-	public static string GetEnemyTypeControllerName(EnemyType type)
+    public static EnemyController CreateRemoteEnemy(EnemyType type, Vector3 pos, Quaternion rot, int enemy_id, bool is_boss = false)
+    {
+        return CreateEnemyInternal(type, pos, rot, enemy_id, false);
+    }
+
+    public static EnemyController CreateEnemyGetEnemyController(EnemyType type, Vector3 pos, Quaternion rot)
+    {
+        return CreateEnemyInternal(type, pos, rot);
+    }
+
+    public static EnemyController CreateEnemyForTrap(EnemyType type, Vector3 pos)
+    {
+        return CreateEnemyInternal(type, pos, Quaternion.identity, null, true);
+    }
+
+
+    public static string GetEnemyTypeControllerName(EnemyType type)
 	{
 		string result = "EnemyController";
 		switch (type)
@@ -96,6 +84,8 @@ public class EnemyFactory : MonoBehaviour
 		case EnemyType.E_ZOMBIE_E:
 		case EnemyType.E_ZOMBIE_COMMIS:
 		case EnemyType.E_ZOMBIE_COMMIS_E:
+        case EnemyType.E_ZOMBIE_COWBOY:
+		case EnemyType.E_ZOMBIE_COWBOY_E:
 			result = "ZombieController";
 			break;
 		case EnemyType.E_NURSE:
@@ -134,6 +124,7 @@ public class EnemyFactory : MonoBehaviour
 			result = "HalloweenController";
 			break;
 		case EnemyType.E_HALLOWEEN_SUB:
+        case EnemyType.E_HALLOWEEN_SUB_E:
 			result = "HalloweenSubController";
 			break;
 		case EnemyType.E_SHARK:

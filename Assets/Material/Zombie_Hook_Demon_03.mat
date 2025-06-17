@@ -29,5 +29,5 @@ Material:
     m_Floats: []
     m_Colors:
     - _Color: {r: 0.588, g: 0.588, b: 0.588, a: 1}
-    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SkinColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 1}
+    - _SkinColor: {r: 1, g: 1, b: 0, a: 1}

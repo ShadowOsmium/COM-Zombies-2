@@ -60,24 +60,22 @@ public class WeaponData
         get
         {
             if (level >= config.max_level)
-            {
                 return 0;
-            }
+
             if (weapon_type == WeaponType.Shield || weapon_type == WeaponType.Medicine)
             {
-                int num = level + 1 - 1;
-                float num2 = (float)config.Ex_conf["priceBase"];
-                float num3 = (float)config.Ex_conf["priceMax"];
-                return (int)(num2 + (float)num * (num3 - num2) / (float)(config.max_level - 1));
+                int idx = level;
+                float basePrice = (float)config.Ex_conf["priceBase"];
+                float maxPrice = (float)config.Ex_conf["priceMax"];
+                return (int)(basePrice + idx * (maxPrice - basePrice) / (config.max_level - 1));
             }
+
             if (config.UpgradeCurrencyType == GameCurrencyType.Voucher)
-            {
                 return (int)(GameConfig.Instance.Standard_Weapon_Price_Voucher_Info[level + 1] * config.up_price_ratio);
-            }
+
             if (config.UpgradeCurrencyType == GameCurrencyType.Cash)
-            {
                 return (int)(GameConfig.Instance.Standard_Weapon_Price_Info[level + 1] * config.up_price_ratio);
-            }
+
             Debug.LogWarning("UpgradeCurrencyType:" + config.UpgradeCurrencyType);
             return 0;
         }
@@ -223,6 +221,12 @@ public class WeaponData
 
     public void ResetData()
     {
+        level = Mathf.Clamp(level, 1, config.max_level);
+        damage_level = Mathf.Clamp(damage_level, 1, config.max_level);
+        frequency_level = Mathf.Clamp(frequency_level, 1, config.max_level);
+        clip_level = Mathf.Clamp(clip_level, 1, config.max_level);
+        range_level = Mathf.Clamp(range_level, 1, config.max_level);
+        stretch_level = Mathf.Clamp(stretch_level, 1, config.max_level);
         int num = stretch_level - 1;
         stretch_max = config.stretch_max.base_data + (float)num * (config.stretch_max.max_data - config.stretch_max.base_data) / (float)(config.max_level - 1);
         num = frequency_level - 1;
@@ -304,6 +308,12 @@ public class WeaponData
 
     public bool Upgrade()
     {
+        level = Mathf.Clamp(level, 1, config.max_level);
+        damage_level = Mathf.Clamp(damage_level, 1, config.max_level);
+        frequency_level = Mathf.Clamp(frequency_level, 1, config.max_level);
+        clip_level = Mathf.Clamp(clip_level, 1, config.max_level);
+        range_level = Mathf.Clamp(range_level, 1, config.max_level);
+        stretch_level = Mathf.Clamp(stretch_level, 1, config.max_level);
         if (level < config.max_level)
         {
             if (config.UpgradeCurrencyType == GameCurrencyType.Voucher)

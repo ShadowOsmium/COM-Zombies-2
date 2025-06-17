@@ -143,23 +143,41 @@ public class UIShopSceneController : UISceneController
 		return Vector3.Distance(MainCamera.transform.position, CameraOrigin.position) < 1f;
 	}
 
-	private void CheckRateGame()
-	{
-		if (GameData.Instance.enter_shop_count < 3)
-		{
-			GameData.Instance.enter_shop_count++;
-			if (GameData.Instance.enter_shop_count == 3)
-			{
-				int num = MiscPlugin.ShowMessageBox2(string.Empty, "Having fun? Rate this app!", "Rate it!", "No, thanks.");
-				GameMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.DoubleButton, base.transform.parent.parent.gameObject, "Having fun? Rate this app!", HaveFunBox, null);
-			}
-			GameData.Instance.SaveData();
-		}
-	}
+    private void CheckRateGame()
+    {
+        if (GameData.Instance.enter_shop_count < 3)
+        {
+            GameData.Instance.enter_shop_count++;
 
-	private void HaveFunBox()
+            if (GameData.Instance.enter_shop_count == 3)
+            {
+                int num = MiscPlugin.ShowMessageBox2(string.Empty, "Having fun? Join my discord server!", "Sure", "No, thanks.");
+
+                Transform parentTransform = base.transform.parent != null ? base.transform.parent.parent : null;
+
+                if (parentTransform != null)
+                {
+                    GameMsgBoxController.ShowMsgBox(
+                        GameMsgBoxController.MsgBoxType.DoubleButton,
+                        parentTransform.gameObject,
+                        "Having fun? Join my discord server!",
+                        HaveFunBox,
+                        null
+                    );
+                }
+                else
+                {
+                    Debug.LogWarning("Parent hierarchy is missing for message box target!");
+                }
+            }
+
+            GameData.Instance.SaveData();
+        }
+    }
+
+    private void HaveFunBox()
 	{
-		Application.OpenURL("https://play.google.com/store/apps/details?id=com.trinitigame.android.callofminizombies2");
+		Application.OpenURL("https://discord.gg/X2j3szhMzt");
 	}
 
 	public void CheckAvatarPosInShop()

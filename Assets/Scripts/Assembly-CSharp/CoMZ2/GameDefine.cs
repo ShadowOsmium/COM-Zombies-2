@@ -18,7 +18,7 @@ namespace CoMZ2
 
 		public const string GAME_VERSION_FILE = "CoMZ2_version";
 
-		public const int EQUIPMENT_NUM = 1;
+		public const int EQUIPMENT_NUM = 2;
 
 		public const int SKILL_LIST_NUM = 2;
 
@@ -70,26 +70,16 @@ namespace CoMZ2
 
 		public const string account_url = "http://account.trinitigame.com/game/callofminizombies2/new_version/";
 
-		public const string review_url = "https://play.google.com/store/apps/details?id=com.trinitigame.android.callofminizombies2";
+		public const string review_url = "https://discord.gg/X2j3szhMzt";
 
-		public const string open_clik_id = "A36F6C65-C1E3-47D4-AD07-AA8A6C90132C";
+        public const string support_url = "https://discord.gg/jthpN6g2RS";
+
+        public const string open_clik_id = "A36F6C65-C1E3-47D4-AD07-AA8A6C90132C";
 
 		public static bool LOAD_CONFIG_SAVE_PATH;
 
 		public static bool LOAD_CONFIG_DATA_PATH;
 
 		public static bool IS_CONFIG_OUTPUT;
-
-		public static string GetSupportUrl()
-		{
-			string empty = string.Empty;
-			empty = "http://www.trinitigame.com/support/support.html?";
-			empty = empty + "&country=" + DevicePlugin.GetCountryCode();
-			empty += "&device=android";
-			empty = empty + "&os=" + DevicePlugin.GetSysVersion();
-			empty += "&game=Call of Mini: Zombies 2";
-			empty += "&gamever=2.1.2";
-			return empty.Replace(" ", "%20");
-		}
 	}
 }

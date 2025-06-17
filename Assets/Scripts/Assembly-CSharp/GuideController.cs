@@ -36,8 +36,8 @@ public class GuideController : MonoBehaviour
 				return;
 			}
 			Time.timeScale = 1f;
-			TAudioManager.instance.musicVolume = 1f;
-			base.gameObject.SetActive(false);
+            TAudioManager.instance.musicVolume = 0.5f;
+            base.gameObject.SetActive(false);
 		}
 	}
 

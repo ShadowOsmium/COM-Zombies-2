@@ -123,7 +123,7 @@ public class GameCoverUIController : MonoBehaviour
 	{
 		if (eventType == 3)
 		{
-			Debug.Log("Game start!");
+			//Debug.Log("Game start!");
 			control.gameObject.SetActive(false);
 			GameData.Instance.loading_to_scene = "UIShop";
 			fade.FadeOut("Loading");
@@ -132,26 +132,27 @@ public class GameCoverUIController : MonoBehaviour
 
 	private void OnServerVersion(bool status)
 	{
-		Debug.Log("OnServerVersion:" + status);
+		//Debug.Log("OnServerVersion:" + status);
 		if (status)
 		{
 			CheckConfigVersion();
 			return;
 		}
 		ShowMask(false);
-		Debug.Log("Game version error!");
-		GameMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.SingleButton, tui_root, "An updated version is required to continue playing.", OnVersionUpdate, null, false);
+		//Debug.Log("Game version error!");
+		GameMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.SingleButton, tui_root, "You have to update the game to continue playing my mod.", OnVersionUpdate, null, false);
 	}
 
 	private void OnVersionUpdate()
 	{
-		Debug.LogError("review -------------  OnVersionUpdate");
-		Application.OpenURL("https://play.google.com/store/apps/details?id=com.trinitigame.android.callofminizombies2");
-	}
+		//Debug.LogError("review -------------  OnVersionUpdate");
+		Application.OpenURL("https://github.com/ShadowOsmium/COM-Zombies-2/releases/latest");
+
+    }
 
 	private void OnServerVersionError()
 	{
-		Debug.Log("OnServerVersionError");
+		//Debug.Log("OnServerVersionError");
 		ShowMask(false);
 	}
 
@@ -197,7 +198,7 @@ public class GameCoverUIController : MonoBehaviour
 			string md5String = MD5Sample.GetMd5String(item);
 			string empty = string.Empty;
 			empty = ((!GameVersion.Instance.is_test_config) ? "Config/" : "ConfigTest/");
-			string url = "http://account.trinitigame.com/game/callofminizombies2/new_version/" + empty + md5String + ".bytes?rand=" + Random.Range(10, 99999);
+			string url = "https://github.com/ShadowOsmium/COM-Zombies-2/releases/latest" + empty + md5String + ".bytes?rand=" + Random.Range(10, 99999);
 			wwwClient.Instance.SendHttpRequest(url, null, OnConfigUpdateFinish, OnConfigUpdateError, item);
 		}
 		if (!flag)

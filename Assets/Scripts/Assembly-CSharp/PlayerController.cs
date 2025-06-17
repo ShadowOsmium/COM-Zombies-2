@@ -814,7 +814,7 @@ public class PlayerController : ObjectController
 		UpdateHpBar();
 		GameSceneController.Instance.screen_blood.OnInjured();
 		EnemyController enemyController = controller as EnemyController;
-		if (enemyController != null && (enemyController.IsBoss || enemyController.enemy_data.enemy_type == EnemyType.E_HALLOWEEN_SUB))
+		if (enemyController != null && (enemyController.IsBoss || enemyController.enemy_data.enemy_type == EnemyType.E_HALLOWEEN_SUB || enemyController.enemy_data.enemy_type == EnemyType.E_HALLOWEEN_SUB_E))
 		{
 			GameSceneController.Instance.boss_screen_blood1.OnInjured(true);
 			GameSceneController.Instance.main_camera.StartCommonShake();
@@ -1400,7 +1400,7 @@ public class PlayerController : ObjectController
 		if (item.item_type == ItemType.Gold)
 		{
 			GameData.Instance.total_cash += GameConfig.Instance.cash_package_val;
-			GameData.Instance.total_cash = new GameDataInt(Mathf.Clamp(GameData.Instance.total_cash.GetIntVal(), 0, 99999999));
+			GameData.Instance.total_cash = new GameDataInt(Mathf.Clamp(GameData.Instance.total_cash.GetIntVal(), 0, 1000000));
 			GameObject gameObject = Object.Instantiate(GameSceneController.Instance.Eff_Accessory[12], base.transform.position, Quaternion.identity) as GameObject;
 			gameObject.transform.parent = base.transform;
 			RemoveTimerScript removeTimerScript = gameObject.AddComponent<RemoveTimerScript>();
@@ -1568,7 +1568,7 @@ public class PlayerController : ObjectController
 		string text = avatar_data.skill_list[index];
 		if (skill_set.ContainsKey(text) && skill_set[text].ConjureSkill())
 		{
-			Debug.Log("ConjureSkill:" + text);
+			//Debug.Log("ConjureSkill:" + text);
 			//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && tnetObj != null)
 			//{
 			//	SFSObject sFSObject = new SFSObject();
@@ -1582,7 +1582,7 @@ public class PlayerController : ObjectController
 	{
 		if (skill_set.ContainsKey(skill_name) && !skill_set[skill_name].ConjureSkill())
 		{
-			Debug.LogWarning("ConjureSkill:" + skill_name + " failed!");
+			//Debug.LogWarning("ConjureSkill:" + skill_name + " failed!");
 		}
 	}
 

@@ -475,7 +475,7 @@ public class IapCenter : MonoBehaviour
 		hashtable["rat"] = m_nRat;
 		string s = JsonMapper.ToJson(hashtable);
 		byte[] post_data = XXTEAUtils.Encrypt(Encoding.UTF8.GetBytes(s), Encoding.UTF8.GetBytes("abcd@@##980[]L>."));
-		wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, action);
+		//wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, action);
 	}
 
 	private void SendIAPVerifyRequest(string product_Id, string tid, string receipt, string action, string signature, bool restore = false)
@@ -500,7 +500,7 @@ public class IapCenter : MonoBehaviour
 		hashtable["rat"] = m_nRat;
 		string s = JsonMapper.ToJson(hashtable);
 		byte[] post_data = XXTEAUtils.Encrypt(Encoding.UTF8.GetBytes(s), Encoding.UTF8.GetBytes("abcd@@##980[]L>."));
-		wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, action);
+		//wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, action);
 	}
 
 	protected void SendIAPVerifyResultRequest()
@@ -511,7 +511,7 @@ public class IapCenter : MonoBehaviour
 		hashtable["randPara"] = m_sRandom;
 		string s = JsonMapper.ToJson(hashtable);
 		byte[] post_data = XXTEAUtils.Encrypt(Encoding.UTF8.GetBytes(s), Encoding.UTF8.GetBytes("abcd@@##980[]L>."));
-		wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, "check");
+		//wwwClient.Instance.SendHttpRequest(GameData.Instance.iap_check_url, post_data, OnTrinitiIapServerCheckFinish, OnTrinitiIapServerCheckError, "check");
 	}
 
 	private void OnTrinitiIapServerCheckFinish(string action, byte[] response_data)

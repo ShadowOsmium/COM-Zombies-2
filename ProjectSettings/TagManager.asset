@@ -19,6 +19,7 @@ TagManager:
   - Home
   - Resource
   - Wood_Box
+  - ExcludeFromLayout
   layers:
   - Default
   - TransparentFX

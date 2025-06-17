@@ -5,6 +5,7 @@ namespace CoMZ2
 		None,
 		Cleaner,
 		Time_ALive,
+        //Endless,
 		Npc_Resources,
 		Npc_Convoy,
 		Boss,

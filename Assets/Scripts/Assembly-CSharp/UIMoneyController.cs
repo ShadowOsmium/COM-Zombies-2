@@ -27,7 +27,7 @@ public class UIMoneyController : MonoBehaviour
 		if (eventType == 3)
 		{
 			UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
-			IapPanel.Show();
+			//IapPanel.Show();
 		}
 	}
 
@@ -36,7 +36,7 @@ public class UIMoneyController : MonoBehaviour
 		if (eventType == 3)
 		{
 			UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
-			IapPanel.Hide(false);
+			//IapPanel.Hide(false);
 		}
 	}
 }

@@ -4,9 +4,11 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_Name: Avatar_Swat_A_01
-  m_Shader: {fileID: 4800000, guid: 7f4f836b9930fff438bad0b2d35030f8, type: 3}
-  m_ShaderKeywords:
+  m_Shader: {fileID: 4800000, guid: 34644fc5dd7f99c48b12540e782edb22, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

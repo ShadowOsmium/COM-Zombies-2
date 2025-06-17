@@ -488,7 +488,7 @@ public class GameSceneController : MonoBehaviour
 		InitMissionController();
 		yield return 2;
 		is_inited = true;
-		Screen.lockCursor = true;
+		//Screen.lockCursor = true;
 		LoadingUIController.FinishedLoading();
 		player_controller.UpdateWeaponUIShow();
 		TAudioController audio_controller = main_camera.gameObject.AddComponent<TAudioController>();
@@ -1082,7 +1082,7 @@ public class GameSceneController : MonoBehaviour
 		OpenClikPlugin.Hide();
 		HidePanels();
 		game_main_panel.Show();
-		Screen.lockCursor = true;
+		//Screen.lockCursor = true;
 		TAudioManager.instance.musicVolume = 1f;
 		TAudioManager.instance.soundVolume = 1f;
 		Time.timeScale = 1f;

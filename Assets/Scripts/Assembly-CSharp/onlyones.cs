@@ -15,7 +15,7 @@ public class onlyones : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			Debug.Log("-------------quit game!!");
+			//Debug.Log("-------------quit game!!");
 			DevicePlugin.AndroidQuit();
 		}
 	}

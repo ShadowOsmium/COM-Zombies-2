@@ -49,9 +49,9 @@ public class UILotteryController : UISceneController
 
 	private void Start()
 	{
-		//IndicatorBlockController.ShowIndicator(TUIControls.gameObject, "Connecting to server...");
-		StartCoroutine(GameData.Instance.ResetCurServerTime());
-		lottery_free_button.gameObject.SetActive(false);
+        //IndicatorBlockController.ShowIndicator(TUIControls.gameObject, "Connecting to server...");
+        StartCoroutine(WaitUntilDailyDataLoadedAndReset());
+        lottery_free_button.gameObject.SetActive(false);
 		lottery_button.gameObject.SetActive(false);
 		lottery_price_p.Text = GameConfig.Instance.lottery_price.GetIntVal().ToString();
 		lottery_price.Text = GameConfig.Instance.lottery_price.GetIntVal().ToString();
@@ -61,10 +61,21 @@ public class UILotteryController : UISceneController
 		{
 			TapJoyScript.Instance.points_add_call_back = OnTapJoyPointsAdd;
 		}
-		OnResetServerTimeFinish();
 	}
 
-	protected override void OnDestroy()
+    private IEnumerator WaitUntilDailyDataLoadedAndReset()
+    {
+        // Wait until daily data is loaded
+        yield return new WaitUntil(() =>
+            GameData.Instance != null &&
+            GameData.Instance.lottery_seat_state != null &&
+            GameData.Instance.lottery_seat_state.Count > 0);
+
+        GameData.Instance.ResetCurNistTime();
+    }
+
+
+    protected override void OnDestroy()
 	{
 		base.OnDestroy();
 		AwardChangePanel.DestroyPanel();
@@ -109,7 +120,7 @@ public class UILotteryController : UISceneController
 			}
 			else
 			{
-				ShowIapPanel();
+				//ShowIapPanel();
 			}
 		}
 	}
@@ -129,7 +140,7 @@ public class UILotteryController : UISceneController
 			}
 			else
 			{
-				ShowIapPanel();
+				//ShowIapPanel();
 			}
 		}
 	}
@@ -179,7 +190,7 @@ public class UILotteryController : UISceneController
 
 	public void ShowIapPanel()
 	{
-		money_controller.IapPanel.Show();
+		//money_controller.IapPanel.Show();
 	}
 
 	public void UpdateLotteryBar()

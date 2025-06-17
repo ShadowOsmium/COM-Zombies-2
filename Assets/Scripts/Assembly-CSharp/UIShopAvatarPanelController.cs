@@ -33,21 +33,21 @@ public class UIShopAvatarPanelController : UIShopPanelController
 		switch (index)
 		{
 		case 0:
-			Properties[index].Name.Text = "HP(LV " + currentPlayer.hp_level + ")";
+			Properties[index].Name.Text = "Health (LV " + currentPlayer.hp_level + " Out Of 60" + ")";
 			Properties[index].Value.Text = currentPlayer.hp_capacity.ToString("N0");
 			flag2 = currentPlayer.hp_level >= currentPlayer.config.max_level;
 			Properties[index].UpgradeValue.Text = ((!flag2) ? ("+" + (currentPlayer.hp_capacity_next - currentPlayer.hp_capacity).ToString("N0")) : string.Empty);
 			text = currentPlayer.UpgradeHpPrice.ToString("G");
 			break;
 		case 1:
-			Properties[index].Name.Text = "Damage(LV " + currentPlayer.damage_level + ")";
+			Properties[index].Name.Text = "Damage (LV " + currentPlayer.damage_level + " Out Of 60" + ")";
 			Properties[index].Value.Text = currentPlayer.damage_val.ToString("N1");
 			flag2 = currentPlayer.damage_level >= currentPlayer.config.max_level;
 			Properties[index].UpgradeValue.Text = ((!flag2) ? ("+" + (currentPlayer.damage_val_next - currentPlayer.damage_val).ToString("N1")) : string.Empty);
 			text = currentPlayer.UpgradeDamagePrice.ToString("G");
 			break;
 		case 2:
-			Properties[index].Name.Text = "Armor(LV " + currentPlayer.armor_level + ")";
+			Properties[index].Name.Text = "Armor (LV " + currentPlayer.armor_level + " Out Of 60" + ")";
 			Properties[index].Value.Text = currentPlayer.armor_val.ToString("N1");
 			flag2 = currentPlayer.armor_level >= currentPlayer.config.max_level;
 			Properties[index].UpgradeValue.Text = ((!flag2) ? ("+" + (currentPlayer.armor_val_next - currentPlayer.armor_val).ToString("N1")) : string.Empty);
@@ -163,60 +163,85 @@ public class UIShopAvatarPanelController : UIShopPanelController
 		}
 		else
 		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
+			//UISceneController.Instance.MoneyController.IapPanel.Show();
 		}
 	}
 
-	private void ShowNewAvatarTip()
-	{
-		if (currentPlayer.avatar_type == AvatarType.Doctor)
-		{
-			ImageMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.SingleButton, GameConfig.Instance.Skill_Enchant_Monster_List[0].ToString(), base.gameObject, "Now charm a zombie of this kind as your sidekick!", null, null);
-		}
-	}
+    private void ShowNewAvatarTip()
+    {
+        if (currentPlayer.avatar_type == AvatarType.Doctor)
+        {
+            int lastUnlockedMonsterIndex = GetLastUnlockedMonsterIndex();
 
-	private void OnExchangeMoneyOk()
-	{
-		if (((CrystalMsgBoxController)msgBox).Exchange.Crystal <= GameData.Instance.total_crystal.GetIntVal())
-		{
-			GameData.Instance.OnExchgCurrcy(GameCurrencyType.Crystal, GameCurrencyType.Voucher, ((CrystalMsgBoxController)msgBox).Exchange.Crystal, ((CrystalMsgBoxController)msgBox).Exchange.Voucher);
-			if (upgradePropertyIdx == -1)
-			{
-				currentPlayer.Buy();
-				UISceneController.Instance.MoneyController.UpdateInfo();
-				UIShopSceneController.Instance.UpdateAvatarShaders();
-				UpdateAvatarInfo();
-				ShowNewAvatarTip();
-			}
-			else
-			{
-				if (upgradePropertyIdx == 0)
-				{
-					currentPlayer.UpgradeHp();
-				}
-				else if (upgradePropertyIdx == 1)
-				{
-					currentPlayer.UpgradeDamage();
-				}
-				else
-				{
-					currentPlayer.UpgradeArmor();
-				}
-				UISceneController.Instance.MoneyController.UpdateInfo();
-				UpdateProperty(upgradePropertyIdx);
-				upgradePropertyIdx = -1;
-				UIShopSceneController.Instance.CheckAvatarPosInShop();
-				avatar_level_tip.ResetTip();
-			}
-		}
-		else
-		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
-		}
-		Object.Destroy(msgBox.gameObject);
-	}
+            if (lastUnlockedMonsterIndex >= 0 && lastUnlockedMonsterIndex < GameConfig.Instance.Skill_Enchant_Monster_List.Count)
+            {
+                string unlockedMonster = GameConfig.Instance.Skill_Enchant_Monster_List[lastUnlockedMonsterIndex].ToString();
+                ImageMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.SingleButton, unlockedMonster, base.gameObject, "Now charm a " + unlockedMonster + " as your sidekick!", null, null);
+            }
+        }
+    }
 
-	private void OnMsgboxCancel()
+    private int lastUnlockedMonsterIndex = -1;
+
+    public void UnlockMonster(int monsterIndex)
+    {
+        if (monsterIndex >= 0 && monsterIndex < GameConfig.Instance.Skill_Enchant_Monster_List.Count)
+        {
+            lastUnlockedMonsterIndex = monsterIndex;
+        }
+    }
+
+    private int GetLastUnlockedMonsterIndex()
+    {
+        return lastUnlockedMonsterIndex;
+    }
+
+    private void OnExchangeMoneyOk()
+    {
+        int playerCrystals = GameData.Instance.total_crystal.GetIntVal();
+        int requiredCrystals = ((CrystalMsgBoxController)msgBox).Exchange.Crystal;
+
+        if (requiredCrystals <= playerCrystals)
+        {
+            GameData.Instance.OnExchgCurrcy(GameCurrencyType.Crystal, GameCurrencyType.Voucher, requiredCrystals, ((CrystalMsgBoxController)msgBox).Exchange.Voucher);
+
+            if (upgradePropertyIdx == -1)
+            {
+                currentPlayer.Buy();
+                UISceneController.Instance.MoneyController.UpdateInfo();
+                UIShopSceneController.Instance.UpdateAvatarShaders();
+                UpdateAvatarInfo();
+                ShowNewAvatarTip();
+            }
+            else
+            {
+                if (upgradePropertyIdx == 0)
+                {
+                    currentPlayer.UpgradeHp();
+                }
+                else if (upgradePropertyIdx == 1)
+                {
+                    currentPlayer.UpgradeDamage();
+                }
+                else
+                {
+                    currentPlayer.UpgradeArmor();
+                }
+                UISceneController.Instance.MoneyController.UpdateInfo();
+                UpdateProperty(upgradePropertyIdx);
+                upgradePropertyIdx = -1;
+                UIShopSceneController.Instance.CheckAvatarPosInShop();
+                avatar_level_tip.ResetTip();
+            }
+        }
+        else
+        {
+            Debug.Log("Not enough crystals to exchange for vouchers.");
+        }
+        Object.Destroy(msgBox.gameObject);
+    }
+
+    private void OnMsgboxCancel()
 	{
 		Object.Destroy(msgBox.gameObject);
 	}
@@ -228,7 +253,7 @@ public class UIShopAvatarPanelController : UIShopPanelController
 			UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
 			string text = "Spend ";
 			text += currentPlayer.config.crystal_unlock_price.ToString();
-			text += " tCrystals to own this avatar directly?";
+			text += " tCrystals to own this character permanently?";
 			msgBox = GameMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.DoubleButton, base.gameObject, text, OnCrystalUnlockOk, OnMsgboxCancel);
 		}
 	}
@@ -248,7 +273,7 @@ public class UIShopAvatarPanelController : UIShopPanelController
 			}
 			int intVal = (currentPlayer.config.price - GameData.Instance.total_voucher).GetIntVal();
 			int crystal = Mathf.CeilToInt((float)intVal / GameConfig.Instance.crystal_to_voucher);
-			string content = "You need " + intVal + " more vouchers to complete the action.";
+			string content = "You need " + intVal + " more vouchers to buy this.";
 			CrystalExchangeCash crystalExchangeCash = new CrystalExchangeCash();
 			crystalExchangeCash.Crystal = crystal;
 			crystalExchangeCash.Voucher = intVal;
@@ -304,7 +329,7 @@ public class UIShopAvatarPanelController : UIShopPanelController
 			return;
 		}
 		int crystal = Mathf.CeilToInt((float)num / GameConfig.Instance.crystal_to_voucher);
-		string content = "You need " + num + " more vouchers to complete the action.";
+		string content = "You need " + num + " more vouchers to buy this.";
 		CrystalExchangeCash crystalExchangeCash = new CrystalExchangeCash();
 		crystalExchangeCash.Crystal = crystal;
 		crystalExchangeCash.Voucher = num;

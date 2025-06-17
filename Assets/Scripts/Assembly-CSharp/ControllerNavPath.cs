@@ -28,20 +28,20 @@ public class ControllerNavPath : MonoBehaviour
 		}
 	}
 
-	private void Update()
-	{
-		repath_interval += Time.deltaTime;
-		if (repath_interval >= 0.25f)
-		{
-			if (target != null && !just_rush_to && nav_agent.enabled)
-			{
-				nav_agent.SetDestination(target.position);
-			}
-			repath_interval = 0f;
-		}
-	}
+    private void Update()
+    {
+        repath_interval += Time.deltaTime;
+        if (repath_interval >= 0.25f)
+        {
+            if (IsTargetValid() && !just_rush_to && CanUseNavAgent())
+            {
+                nav_agent.SetDestination(target.position);
+            }
+            repath_interval = 0f;
+        }
+    }
 
-	private IEnumerator LocomotionJumpLogic()
+    private IEnumerator LocomotionJumpLogic()
 	{
 		if (IsOnOffMeshLink() && nav_agent.updatePosition)
 		{
@@ -64,16 +64,21 @@ public class ControllerNavPath : MonoBehaviour
 		}
 	}
 
-	public bool IsOnOffMeshLink()
-	{
-		if (target != null)
-		{
-			return nav_agent.isOnOffMeshLink;
-		}
-		return false;
-	}
+    public bool IsOnOffMeshLink()
+    {
+        if (IsTargetValid())
+        {
+            return nav_agent.isOnOffMeshLink;
+        }
+        return false;
+    }
 
-	public void Catching(bool status)
+    private bool IsTargetValid()
+    {
+        return target != null && target.gameObject != null && target.gameObject.activeInHierarchy;
+    }
+
+    public void Catching(bool status)
 	{
 		nav_agent.updatePosition = status;
 		nav_agent.updateRotation = status;
@@ -84,21 +89,29 @@ public class ControllerNavPath : MonoBehaviour
 		return nav_agent.updatePosition;
 	}
 
-	public void SetTarget(Transform trans)
-	{
-		target = trans;
-		if (target != null)
-		{
-			nav_agent.SetDestination(target.position);
-		}
-	}
+    public void SetTarget(Transform trans)
+    {
+        target = trans;
+        if (IsTargetValid() && CanUseNavAgent())
+        {
+            nav_agent.SetDestination(target.position);
+        }
+    }
 
-	public void SetTargetPosition(Vector3 pos)
-	{
-		nav_agent.SetDestination(pos);
-	}
+    private bool CanUseNavAgent()
+    {
+        return nav_agent != null && nav_agent.enabled && nav_agent.isOnNavMesh;
+    }
 
-	public void SetSpeed(float speed)
+    public void SetTargetPosition(Vector3 pos)
+    {
+        if (CanUseNavAgent())
+        {
+            nav_agent.SetDestination(pos);
+        }
+    }
+
+    public void SetSpeed(float speed)
 	{
 		nav_agent.speed = speed;
 	}

@@ -38,6 +38,8 @@ public class FatCookController : EnemyController
 
     private BossCoopMissionController coopMission;
 
+    private BossMissionController mission;
+
     protected Collider attackCollider;
 
 	protected Transform miantuanHand;
@@ -105,12 +107,21 @@ public class FatCookController : EnemyController
 	private string stone_ani2 = string.Empty;
 
 	public override Vector3 centroid
-	{
-		get
-		{
-			return base.transform.position + Vector3.up * 1.6f;
-		}
-	}
+    {
+        get
+        {
+            return base.transform.position + Vector3.up * 1.6f;
+        }
+    }
+
+    
+    void Awake()
+    {
+        var mc = GameSceneController.Instance.mission_controller;
+
+        coopMission = mc as BossCoopMissionController;
+        mission = mc as BossMissionController;
+    }
 
 	public override void Init()
 	{
@@ -559,13 +570,20 @@ public class FatCookController : EnemyController
 
     public void SummonTimerBoomer()
     {
-        if (((BossHalfHpState)HALF_HP_STATE).IsPlayed && coopMission != null)
+        if (!((BossHalfHpState)HALF_HP_STATE).IsPlayed)
+            return;
+
+        if (coopMission != null)
         {
             coopMission.StartCoroutine(coopMission.FatcookSummon());
         }
-        else if (coopMission == null)
+        else if (mission != null)
         {
-            Debug.LogWarning("coopMission is null, FatCookSummon skipped.");
+            StartCoroutine(mission.FatcookSummon());
+        }
+        else
+        {
+            Debug.LogWarning("FatCookController: No mission controller found for summoning!");
         }
     }
 

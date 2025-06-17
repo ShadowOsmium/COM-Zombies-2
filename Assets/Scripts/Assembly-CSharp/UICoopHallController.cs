@@ -201,16 +201,19 @@ public class UICoopHallController : UISceneController
 		reward_list.Add(gameObject);
 	}
 
-	private void CreateDebrisReward(string image, int index)
-	{
-		GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Prefab/reward_debris")) as GameObject;
-		gameObject.transform.parent = reward_root.transform;
-		gameObject.transform.localPosition = new Vector3(index * 45, 0f, -2f);
-		gameObject.transform.Find("image").GetComponent<TUIMeshSprite>().texture = image;
-		reward_list.Add(gameObject);
-	}
+    private void CreateDebrisReward(string image, int index)
+    {
+        if (string.IsNullOrEmpty(image))
+            return;
 
-	private void OnConnection(TNetEventData eventData)
+        GameObject gameObject = UnityEngine.Object.Instantiate(Resources.Load("Prefab/reward_debris")) as GameObject;
+        gameObject.transform.parent = reward_root.transform;
+        gameObject.transform.localPosition = new Vector3(index * 45, 0f, -2f);
+        gameObject.transform.Find("image").GetComponent<TUIMeshSprite>().texture = image;
+        reward_list.Add(gameObject);
+    }
+
+    private void OnConnection(TNetEventData eventData)
 	{
 		Debug.Log("On connected...");
 		TNetConnection.Connection = tNetObject;
@@ -356,7 +359,7 @@ public class UICoopHallController : UISceneController
 		yield return www;
 		if (www.error != null)
 		{
-			Debug.Log(www.error);
+			//Debug.Log(www.error);
 			IndicatorBlockController.Hide();
 			//GameMsgBoxController.ShowMsgBox(GameMsgBoxController.MsgBoxType.SingleButton, TUIControls.gameObject, "Unable to connect to the server! Please try again later.", OnOnConnectionFailedButton, null);
 			yield break;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class WeaponInfoOwned : MonoBehaviour
 {
 	public TUIButtonClick EquipButton;
-
+        
 	public WeaponProperty[] Properties;
 
 	public WeaponProperty Ammo;

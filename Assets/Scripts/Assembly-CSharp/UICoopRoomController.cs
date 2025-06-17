@@ -40,7 +40,7 @@ public class UICoopRoomController : UISceneController
 
 	private IEnumerator Start()
 	{
-		if (TNetConnection.IsInitialized)
+		/*if (TNetConnection.IsInitialized)
 		{
 			tnetObj = TNetConnection.Connection;
 			tnetObj.AddEventListener(TNetEventSystem.CONNECTION_KILLED, OnConnectionLost);
@@ -62,8 +62,8 @@ public class UICoopRoomController : UISceneController
 		else
 		{
 			Debug.LogError("tnetObj init error!");
-		}
-		yield return 1;
+		}*/
+		//yield return 1;
 		SFSObject dataObj = new SFSObject();
 		dataObj.PutInt("avatarType", (int)GameData.Instance.cur_avatar);
 		dataObj.PutUtfString("nickname", GameData.Instance.NickName);

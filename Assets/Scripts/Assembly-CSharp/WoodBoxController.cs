@@ -75,20 +75,27 @@ public class WoodBoxController : ObjectController
 	{
 	}
 
-	public override void OnHit(float damage, WeaponController weapon, ObjectController controller, Vector3 hit_point, Vector3 hit_normal)
-	{
-		if (!is_broken)
-		{
-			cur_hp -= damage;
-			if (cur_hp <= 0f)
-			{
-				is_broken = true;
-				OnDead(damage, weapon, controller, hit_point, hit_normal);
-			}
-		}
-	}
+    public override void OnHit(float damage, WeaponController weapon, ObjectController controller, Vector3 hit_point, Vector3 hit_normal)
+    {
+        string weaponName = weapon != null ? weapon.name : "unknown weapon";
+        string controllerName = controller != null ? controller.name : "unknown controller";
 
-	public override void OnDead(float damage, WeaponController weapon, ObjectController controller, Vector3 hit_point, Vector3 hit_normal)
+        Debug.Log(string.Format("WoodBoxController.OnHit called with damage={0} by {1} from {2}", damage, weaponName, controllerName));
+
+        if (!is_broken)
+        {
+            cur_hp -= damage;
+            if (cur_hp <= 0f)
+            {
+                is_broken = true;
+                Debug.Log("WoodBoxController broken! Calling OnDead.");
+                Debug.Log("OnDead called\n" + new System.Diagnostics.StackTrace().ToString());
+                OnDead(damage, weapon, controller, hit_point, hit_normal);
+            }
+        }
+    }
+
+    public override void OnDead(float damage, WeaponController weapon, ObjectController controller, Vector3 hit_point, Vector3 hit_normal)
 	{
 		GameSceneController.Instance.CreateAudioOncePlayer("BrokenWood01", 1f, base.transform.position);
 		StartCoroutine(OnSpawnItem());
@@ -110,47 +117,76 @@ public class WoodBoxController : ObjectController
 		StartCoroutine(OnSpawnItem());
 	}
 
-	private IEnumerator OnSpawnItem()
-	{
-		yield return 1;
-		GameSceneController.Instance.wood_box_list.Remove(base.gameObject);
-		int total_val = 0;
-		int[] rateTables = RateTables;
-		foreach (int val in rateTables)
-		{
-			total_val += val;
-		}
-		int rate = Random.Range(0, total_val);
-		int tem_total_val = 0;
-		int index = 0;
-		bool spawn_success = false;
-		int[] rateTables2 = RateTables;
-		foreach (int val2 in rateTables2)
-		{
-			tem_total_val += val2;
-			if (rate < tem_total_val)
-			{
-				spawn_success = true;
-				break;
-			}
-			index++;
-		}
-		if (spawn_success && index < Accessory.Count)
-		{
-			//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Normal || (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && TNetConnection.IsServer))
-			//{
-				Vector3 offset = Vector3.up * 0.5f;
-				Object.Instantiate(Accessory[index], base.transform.position + offset, Quaternion.identity);
-			//}
-		}
-		else
-		{
-			Debug.Log("Spawn game item Error, index:" + index);
-		}
-		GameObject box_break_obj = Object.Instantiate(box_break_eff) as GameObject;
-		box_break_obj.transform.position = base.gameObject.transform.position;
-		box_break_obj.transform.rotation = Quaternion.Euler(new Vector3(0f, base.gameObject.transform.rotation.eulerAngles.y, 0f));
-		box_break_obj.AddComponent<RemoveTimerScript>().life = 3f;
-		Object.Destroy(base.gameObject);
-	}
+    private IEnumerator OnSpawnItem()
+    {
+        yield return 1;
+        GameSceneController.Instance.wood_box_list.Remove(base.gameObject);
+
+        List<GameObject> filteredAccessories = new List<GameObject>();
+        List<int> filteredRates = new List<int>();
+
+        for (int i = 0; i < Accessory.Count; i++)
+        {
+            GameObject obj = Accessory[i];
+            if (obj.name != "Ammo_Packet" && obj.name != "Ammo_Packet(Clone)")
+            {
+                filteredAccessories.Add(obj);
+                if (i < RateTables.Length)
+                {
+                    filteredRates.Add(RateTables[i]);
+                }
+                else
+                {
+                    filteredRates.Add(0);
+                }
+            }
+        }
+
+        Debug.Log("Filtered spawn table:");
+        for (int i = 0; i < filteredAccessories.Count; i++)
+        {
+            Debug.Log(string.Format("  {0} (Rate: {1})", filteredAccessories[i].name, filteredRates[i]));
+        }
+
+        int total_val = 0;
+        for (int i = 0; i < filteredRates.Count; i++)
+        {
+            total_val += filteredRates[i];
+        }
+
+        int rate = Random.Range(0, total_val);
+        int tem_total_val = 0;
+        int selectedIndex = -1;
+
+        for (int i = 0; i < filteredRates.Count; i++)
+        {
+            tem_total_val += filteredRates[i];
+            if (rate < tem_total_val)
+            {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        if (selectedIndex >= 0 && selectedIndex < filteredAccessories.Count)
+        {
+            GameObject prefabToSpawn = filteredAccessories[selectedIndex];
+            Debug.Log("Selected to spawn: " + prefabToSpawn.name);
+
+            Vector3 offset = Vector3.up * 0.5f;
+            GameObject spawned = Object.Instantiate(prefabToSpawn, base.transform.position + offset, Quaternion.identity);
+
+            Debug.Log("Actually spawned: " + spawned.name);
+        }
+        else
+        {
+            Debug.Log("Spawn game item Error, selectedIndex: " + selectedIndex);
+        }
+
+        GameObject box_break_obj = Object.Instantiate(box_break_eff) as GameObject;
+        box_break_obj.transform.position = base.gameObject.transform.position;
+        box_break_obj.transform.rotation = Quaternion.Euler(new Vector3(0f, base.gameObject.transform.rotation.eulerAngles.y, 0f));
+        box_break_obj.AddComponent<RemoveTimerScript>().life = 3f;
+        Object.Destroy(base.gameObject);
+    }
 }

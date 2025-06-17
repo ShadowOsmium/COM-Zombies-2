@@ -382,7 +382,35 @@
 					<height>28</height>
 				</FrameInfo>
 				<FrameInfo>
-					<frameName>big_boss_icon_4</frameName>
+					<frameName>big_boss_icon_5</frameName>
+					<x>737</x>
+					<y>154</y>
+					<width>240</width>
+					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>big_boss_icon_6</frameName>
+					<x>245</x>
+					<y>385</y>
+					<width>240</width>
+					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>big_boss_icon_7</frameName>
+					<x>731</x>
+					<y>397</y>
+					<width>240</width>
+					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>big_boss_icon_8</frameName>
+					<x>488</x>
+					<y>397</y>
+					<width>240</width>
+					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>big_boss_icon_9</frameName>
 					<x>251</x>
 					<y>142</y>
 					<width>240</width>
@@ -396,44 +424,9 @@
 					<height>240</height>
 				</FrameInfo>
 				<FrameInfo>
-					<frameName>big_boss_icon_0</frameName>
-					<x>737</x>
-					<y>154</y>
-					<width>240</width>
-					<height>240</height>
-				</FrameInfo>
-				<FrameInfo>
 					<frameName>touxiang_ditu</frameName>
 					<x>2</x>
 					<y>173</y>
-					<width>240</width>
-					<height>240</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>big_boss_icon_1</frameName>
-					<x>245</x>
-					<y>385</y>
-					<width>240</width>
-					<height>240</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>big_boss_icon_3</frameName>
-					<x>488</x>
-					<y>397</y>
-					<width>240</width>
-					<height>240</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>big_boss_icon_2</frameName>
-					<x>731</x>
-					<y>397</y>
-					<width>240</width>
-					<height>240</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>big_boss_icon_6</frameName>
-					<x>731</x>
-					<y>397</y>
 					<width>240</width>
 					<height>240</height>
 				</FrameInfo>

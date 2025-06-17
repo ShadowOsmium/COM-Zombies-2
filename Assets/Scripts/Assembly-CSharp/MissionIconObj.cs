@@ -89,33 +89,27 @@ public class MissionIconObj : MonoBehaviour
 		}
 	}
 
-	private void OnMissionButtonEvent(TUIControl control, int eventType, float wparam, float lparam, object data)
-	{
-		if (eventType != 3)
-		{
-			return;
-		}
-		UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
-		if (questInfo.mission_type == MissionType.Coop)
-		{
-			if (GameData.Instance.NickName == string.Empty)
-			{
-				UIMapSceneController.Instance.NickNamePanel.Show();
-			}
-			else
-			{
-				UIMapSceneController.Instance.Fade.FadeOut("UICoopHall");
-			}
-		}
-		else if (questInfo.mission_day_type != MissionDayType.Daily)
-		{
-			((UIMapMissionPanelController)UIMapSceneController.Instance.MissionPanel).QuestInfo = questInfo;
-			UIMapSceneController.Instance.MissionPanel.Show();
-		}
-		else
-		{
-			((UIMapMissionDailyPanelController)UIMapSceneController.Instance.MissionDailyPanel).QuestInfo = questInfo;
-			UIMapSceneController.Instance.ConnectServer();
-		}
-	}
+    private void OnMissionButtonEvent(TUIControl control, int eventType, float wparam, float lparam, object data)
+    {
+        if (eventType != 3)
+        {
+            return;
+        }
+        UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
+        if (questInfo.mission_type == MissionType.Coop)
+        {
+            var nicknamePanelController = UIMapSceneController.Instance.NickNamePanel.GetComponent<UIMapNicknamePanelController>();
+            nicknamePanelController.ShowAndThenGoToScene("UICoopHall");
+        }
+        else if (questInfo.mission_day_type != MissionDayType.Daily)
+        {
+            ((UIMapMissionPanelController)UIMapSceneController.Instance.MissionPanel).QuestInfo = questInfo;
+            UIMapSceneController.Instance.MissionPanel.Show();
+        }
+        else
+        {
+            ((UIMapMissionDailyPanelController)UIMapSceneController.Instance.MissionDailyPanel).QuestInfo = questInfo;
+            UIMapSceneController.Instance.ConnectServer();
+        }
+    }
 }

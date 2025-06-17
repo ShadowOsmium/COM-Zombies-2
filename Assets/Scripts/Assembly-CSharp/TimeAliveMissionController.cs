@@ -136,6 +136,6 @@ public class TimeAliveMissionController : MissionController
 
 	public override void CaculateDifficulty()
 	{
-		mission_life_time = 90f;
+		mission_life_time = 180f;
 	}
 }

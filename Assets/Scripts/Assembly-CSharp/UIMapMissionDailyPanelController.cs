@@ -102,7 +102,7 @@ public class UIMapMissionDailyPanelController : UIShopPanelController
 				num++;
 			}
 		}
-		Description.Text = ((!GameData.Instance.is_crazy_daily) ? "Have fun slaying zombies!" : "Get fivefold rewards while difficulty level is quadrupled.");
+		Description.Text = ((!GameData.Instance.is_crazy_daily) ? "Have fun slaying zombies!" : "Get 5x rewards while difficulty level is quadrupled.");
 	}
 
 	private void UpdateButtonInfo()
@@ -239,7 +239,7 @@ public class UIMapMissionDailyPanelController : UIShopPanelController
 		}
 		else
 		{
-			UIMapSceneController.Instance.MoneyController.IapPanel.Show();
+			//UIMapSceneController.Instance.MoneyController.IapPanel.Show();
 		}
 	}
 
@@ -256,7 +256,7 @@ public class UIMapMissionDailyPanelController : UIShopPanelController
 		}
 		else
 		{
-			UIMapSceneController.Instance.MoneyController.IapPanel.Show();
+			//UIMapSceneController.Instance.MoneyController.IapPanel.Show();
 		}
 	}
 

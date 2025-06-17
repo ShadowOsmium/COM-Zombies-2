@@ -51,25 +51,28 @@ public class SkillData
 		}
 	}
 
-	public void ResetData()
-	{
-		int num = level - 1;
-		cd_interval = config.cd_time_cfg.base_data + (float)num * (config.cd_time_cfg.max_data - config.cd_time_cfg.base_data) / (float)(config.max_level - 1);
-		life_time = config.life_time_cfg.base_data + (float)num * (config.life_time_cfg.max_data - config.life_time_cfg.base_data) / (float)(config.max_level - 1);
-		hp_capcity = config.hp_cfg.base_data + (float)num * (config.hp_cfg.max_data - config.hp_cfg.base_data) / (float)(config.max_level - 1);
-		frequency_val = config.frequency_cfg.base_data + (float)num * (config.frequency_cfg.max_data - config.frequency_cfg.base_data) / (float)(config.max_level - 1);
-		range_val = config.range_cfg.base_data + (float)num * (config.range_cfg.max_data - config.range_cfg.base_data) / (float)(config.max_level - 1);
-		damage_val = config.damage_cfg.base_data * Mathf.Pow(config.damage_para, level - 1);
-		num = ((level < config.max_level) ? (level + 1 - 1) : (level - 1));
-		cd_interval_next = config.cd_time_cfg.base_data + (float)num * (config.cd_time_cfg.max_data - config.cd_time_cfg.base_data) / (float)(config.max_level - 1);
-		life_time_next = config.life_time_cfg.base_data + (float)num * (config.life_time_cfg.max_data - config.life_time_cfg.base_data) / (float)(config.max_level - 1);
-		hp_capcity_next = config.hp_cfg.base_data + (float)num * (config.hp_cfg.max_data - config.hp_cfg.base_data) / (float)(config.max_level - 1);
-		frequency_val_next = config.frequency_cfg.base_data + (float)num * (config.frequency_cfg.max_data - config.frequency_cfg.base_data) / (float)(config.max_level - 1);
-		range_val_next = config.range_cfg.base_data + (float)num * (config.range_cfg.max_data - config.range_cfg.base_data) / (float)(config.max_level - 1);
-		damage_val_next = config.damage_cfg.base_data * Mathf.Pow(config.damage_para, num + 1 - 1);
-	}
+    public void ResetData()
+    {
+        int clampedLevel = Mathf.Clamp(level, 1, config.max_level > 0 ? config.max_level : 1);
+        level = clampedLevel;
+        int num = clampedLevel - 1;
+        cd_interval = config.cd_time_cfg.base_data + (config.cd_time_cfg.max_data - config.cd_time_cfg.base_data) * num / (float)(config.max_level - 1);
+        life_time = config.life_time_cfg.base_data + (config.life_time_cfg.max_data - config.life_time_cfg.base_data) * num / (float)(config.max_level - 1);
+        hp_capcity = config.hp_cfg.base_data + (config.hp_cfg.max_data - config.hp_cfg.base_data) * num / (float)(config.max_level - 1);
+        frequency_val = config.frequency_cfg.base_data + (config.frequency_cfg.max_data - config.frequency_cfg.base_data) * num / (float)(config.max_level - 1);
+        range_val = config.range_cfg.base_data + (config.range_cfg.max_data - config.range_cfg.base_data) * num / (float)(config.max_level - 1);
+        damage_val = config.damage_cfg.base_data * Mathf.Pow(config.damage_para, num);
+        int nextLevel = Mathf.Clamp(clampedLevel + 1, 1, config.max_level);
+        int nextNum = nextLevel - 1;
+        cd_interval_next = config.cd_time_cfg.base_data + (config.cd_time_cfg.max_data - config.cd_time_cfg.base_data) * nextNum / (float)(config.max_level - 1);
+        life_time_next = config.life_time_cfg.base_data + (config.life_time_cfg.max_data - config.life_time_cfg.base_data) * nextNum / (float)(config.max_level - 1);
+        hp_capcity_next = config.hp_cfg.base_data + (config.hp_cfg.max_data - config.hp_cfg.base_data) * nextNum / (float)(config.max_level - 1);
+        frequency_val_next = config.frequency_cfg.base_data + (config.frequency_cfg.max_data - config.frequency_cfg.base_data) * nextNum / (float)(config.max_level - 1);
+        range_val_next = config.range_cfg.base_data + (config.range_cfg.max_data - config.range_cfg.base_data) * nextNum / (float)(config.max_level - 1);
+        damage_val_next = config.damage_cfg.base_data * Mathf.Pow(config.damage_para, nextNum);
+    }
 
-	public bool Unlock()
+    public bool Unlock()
 	{
 		if (exist_state == SkillExistState.Locked)
 		{

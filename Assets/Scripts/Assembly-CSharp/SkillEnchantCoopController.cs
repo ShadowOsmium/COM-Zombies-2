@@ -10,7 +10,7 @@ public class SkillEnchantCoopController : SkillCoopController
 		doctor = owner as DoctorCoopController;
 		if (owner == null)
 		{
-			Debug.LogError("SkillEnchantCoopController owner error.");
+			//Debug.LogError("SkillEnchantCoopController owner error.");
 		}
 	}
 
@@ -23,7 +23,7 @@ public class SkillEnchantCoopController : SkillCoopController
 	{
 		base.OnSkillConjure();
 		doctor.SetFireState(doctor.ENCHANT_SKILL_STATE);
-		Debug.Log("SkillEnchantController OnSkillConjure");
+		//Debug.Log("SkillEnchantController OnSkillConjure");
 	}
 
 	public bool EnableEnchantMonst(EnemyType enemy_type)

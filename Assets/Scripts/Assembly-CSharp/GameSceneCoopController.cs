@@ -295,7 +295,7 @@ public class GameSceneCoopController : GameSceneController
 		InitMissionController();
 		yield return 2;
 		is_inited = true;
-		Screen.lockCursor = true;
+		//Screen.lockCursor = true;
 		LoadingUIController.FinishedLoading();
 		player_controller.UpdateWeaponUIShow();
 		TAudioController audio_controller = main_camera.gameObject.AddComponent<TAudioController>();
@@ -402,8 +402,8 @@ public class GameSceneCoopController : GameSceneController
         MissionStatistics();
         GameData.Instance.SaveData();
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
 
         if (tnetObj != null)
         {
@@ -458,11 +458,13 @@ public class GameSceneCoopController : GameSceneController
 		if (GameData.Instance.total_crystal.GetIntVal() >= cur_rebirth_cost)
 		{
 			game_main_panel.rebirth_panel.Show();
-		}
-		else
+            Screen.lockCursor = false;
+        }
+        else
 		{
 			SetPlayerCoopDead();
-		}
+            Screen.lockCursor = true;
+        }
 	}
 
     public void MissionRewardFailed()
@@ -706,28 +708,34 @@ public class GameSceneCoopController : GameSceneController
 
 	public override void OnGamePause()
 	{
+
 		HidePanels();
 		game_pause_panel.Show();
 		((GamePausePanelController)game_pause_panel).ResetButtonState();
 		TAudioManager.instance.musicVolume = 0f;
 		TAudioManager.instance.soundVolume = 0f;
-	}
+        PC pc = FindObjectOfType<PC>();
+        if (pc != null)
+        {
+            pc.PauseGame();
+        }
+    }
 
 	public override void OnGameResume()
 	{
 		OpenClikPlugin.Hide();
 		HidePanels();
 		game_main_panel.Show();
-		Screen.lockCursor = true;
-		TAudioManager.instance.musicVolume = 1f;
-		TAudioManager.instance.soundVolume = 1f;
+		//Screen.lockCursor = true;
+		TAudioManager.instance.musicVolume = 0.5f;
+		TAudioManager.instance.soundVolume = 0.5f;
 	}
 
 	public override void OnGameQuit()
 	{
 		OpenClikPlugin.Hide();
-		TAudioManager.instance.musicVolume = 1f;
-		TAudioManager.instance.soundVolume = 1f;
+		TAudioManager.instance.musicVolume = 0.5f;
+		TAudioManager.instance.soundVolume = 0.5f;
 		QuitGameForDisconnect(0.2f);
 	}
 
@@ -753,23 +761,22 @@ public class GameSceneCoopController : GameSceneController
 		GoShopScene();
 	}
 
-	public override void FatCookSummon()
-	{
-		if (TNetConnection.IsServer)
-		{
-			StartCoroutine(((BossCoopMissionController)mission_controller).FatcookSummon());
-		}
-	}
+    private GameObject boss;
 
-	public override void HalloweenSummon()
-	{
-		if (TNetConnection.IsServer)
-		{
-			StartCoroutine(((BossCoopMissionController)mission_controller).HalloweenSummon());
-		}
-	}
+    public override void FatCookSummon()
+    {
+        if (mission_controller != null)
+            StartCoroutine(((BossCoopMissionController)mission_controller).FatcookSummon());
+    }
 
-	public override EnemyData GetBossData()
+    public override void HalloweenSummon()
+    {
+        if (mission_controller != null)
+            StartCoroutine(((BossCoopMissionController)mission_controller).HalloweenSummon());
+    }
+
+
+    public override EnemyData GetBossData()
 	{
 		return ((BossCoopMissionController)mission_controller).MissionBoss.enemy_data;
 	}
@@ -1452,7 +1459,6 @@ public class GameSceneCoopController : GameSceneController
 
     public void QuitGameForDisconnect(float time)
     {
-        // Unpause immediately to prevent game freeze
         Time.timeScale = 1f;
 
         if (tnetObj != null)

@@ -87,8 +87,7 @@ public class UIShopSettingsPanelController : UIShopPanelController
 		if (eventType == 3)
 		{
 			UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
-			Debug.LogError("review -------------  OnButtonReviewEvent");
-			Application.OpenURL("https://play.google.com/store/apps/details?id=com.trinitigame.android.callofminizombies2");
+			Application.OpenURL("https://discord.gg/X2j3szhMzt");
 		}
 	}
 
@@ -97,7 +96,8 @@ public class UIShopSettingsPanelController : UIShopPanelController
 		if (eventType == 3)
 		{
 			UISceneController.Instance.SceneAudio.PlayAudio("UI_click");
-			Application.OpenURL(GameDefine.GetSupportUrl());
-		}
+			Application.OpenURL("https://discord.gg/jthpN6g2RS");
+
+        }
 	}
 }

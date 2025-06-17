@@ -111,7 +111,7 @@ public class GameConfig : MonoBehaviour
 
 	public float monster_hatred_ratio;
 
-	public float bullet_package_ratio;
+	//public float bullet_package_ratio;
 
 	public float hp_package_ratio;
 
@@ -194,12 +194,14 @@ public class GameConfig : MonoBehaviour
 		Skill_Enchant_Monster_List.Add(EnemyType.E_NURSE);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_BOOMER);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_CLOWN);
-		Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_COMMIS_E);
+        Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_COWBOY);
+        Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_COMMIS_E);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_E);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_NURSE_E);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_BOOMER_E);
 		Skill_Enchant_Monster_List.Add(EnemyType.E_CLOWN_E);
-	}
+        Skill_Enchant_Monster_List.Add(EnemyType.E_ZOMBIE_COWBOY_E);
+    }
 
 	public void Init()
 	{
@@ -287,7 +289,7 @@ public class GameConfig : MonoBehaviour
 		Channel_Scene_Color_Set = new Dictionary<string, Color32>();
 		Coop_Boss_Cfg_Set = new Dictionary<EnemyType, CoopBossCfg>();
 		monster_hatred_ratio = 0f;
-		bullet_package_ratio = 0f;
+		//bullet_package_ratio = 0f;
 		hp_package_ratio = 0f;
 		init_cash = 0;
 		init_voucher = 0;
@@ -329,60 +331,67 @@ public class GameConfig : MonoBehaviour
 		}
 	}
 
-	public void LoadSkillConfig()
-	{
-		string xml = LoadConfigFile("SkillCfg");
-		XmlDocument xmlDocument = new XmlDocument();
-		xmlDocument.LoadXml(xml);
-		XmlElement documentElement = xmlDocument.DocumentElement;
-		foreach (XmlElement item in documentElement.GetElementsByTagName("Skill"))
-		{
-			SkillConfig skillConfig = new SkillConfig();
-			skillConfig.skill_name = item.GetAttribute("name");
-			skillConfig.show_name = item.GetAttribute("showName");
-			skillConfig.max_level = int.Parse(item.GetAttribute("maxLevel"));
-			skillConfig.unlock_level = int.Parse(item.GetAttribute("unlockLevel"));
-			skillConfig.unlock_price = int.Parse(item.GetAttribute("unlockPrice"));
-			skillConfig.up_price_ratio = float.Parse(item.GetAttribute("upPriceRatio"));
-			skillConfig.damage_para = float.Parse(item.GetAttribute("damagePara"));
-			skillConfig.skill_content = item.GetAttribute("content");
-			skillConfig.exist_state = (SkillExistState)int.Parse(item.GetAttribute("existState"));
-			XmlElement element = item.GetElementsByTagName("CDTime")[0] as XmlElement;
-			skillConfig.cd_time_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("LifeTime")[0] as XmlElement;
-			skillConfig.life_time_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("HP")[0] as XmlElement;
-			skillConfig.hp_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("Frequency")[0] as XmlElement;
-			skillConfig.frequency_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("Damage")[0] as XmlElement;
-			skillConfig.damage_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("Range")[0] as XmlElement;
-			skillConfig.range_cfg = GetUpgradeCfg(element);
-			element = item.GetElementsByTagName("Ex")[0] as XmlElement;
-			if (element != null)
-			{
-				skillConfig.Ex_conf = GetExCfg(element);
-			}
-			string attribute = item.GetAttribute("ownerType");
-			if (attribute == "Avatar")
-			{
-				skillConfig.owner_avatar = GetAvatarTypeFromCfg(item.GetAttribute("owner"));
-				Skill_Avatar_Set[skillConfig.skill_name] = skillConfig;
-			}
-			else if (attribute == "Monster")
-			{
-				skillConfig.owner_enmey = GetEnemyTypeFromCfg(item.GetAttribute("owner"));
-				Skill_Monster_Set[skillConfig.skill_name] = skillConfig;
-			}
-		}
-		XmlElement xmlElement2 = documentElement.GetElementsByTagName("SkillUpPriceCfg")[0] as XmlElement;
-		Skill_Up_Price_Info.ParaA = float.Parse(xmlElement2.GetAttribute("ParaA"));
-		Skill_Up_Price_Info.ParaB = float.Parse(xmlElement2.GetAttribute("ParaB"));
-		Skill_Up_Price_Info.ParaK = float.Parse(xmlElement2.GetAttribute("ParaK"));
-	}
+    public void LoadSkillConfig()
+    {
+        string xml = LoadConfigFile("SkillCfg");
+        XmlDocument xmlDocument = new XmlDocument();
+        xmlDocument.LoadXml(xml);
+        XmlElement documentElement = xmlDocument.DocumentElement;
 
-	public void LoadLotteryConfig()
+        foreach (XmlElement item in documentElement.GetElementsByTagName("Skill"))
+        {
+            SkillConfig skillConfig = new SkillConfig();
+            skillConfig.skill_name = item.GetAttribute("name");
+            skillConfig.show_name = item.GetAttribute("showName");
+            skillConfig.max_level = int.Parse(item.GetAttribute("maxLevel"));
+            skillConfig.unlock_level = int.Parse(item.GetAttribute("unlockLevel"));
+            skillConfig.unlock_price = int.Parse(item.GetAttribute("unlockPrice"));
+            skillConfig.up_price_ratio = float.Parse(item.GetAttribute("upPriceRatio"));
+            skillConfig.damage_para = float.Parse(item.GetAttribute("damagePara"));
+            skillConfig.skill_content = item.GetAttribute("content");
+            skillConfig.exist_state = (SkillExistState)int.Parse(item.GetAttribute("existState"));
+
+            XmlElement element = item.GetElementsByTagName("CDTime")[0] as XmlElement;
+            skillConfig.cd_time_cfg = GetUpgradeCfg(element);
+            element = item.GetElementsByTagName("LifeTime")[0] as XmlElement;
+            skillConfig.life_time_cfg = GetUpgradeCfg(element);
+            element = item.GetElementsByTagName("HP")[0] as XmlElement;
+            skillConfig.hp_cfg = GetUpgradeCfg(element);
+            element = item.GetElementsByTagName("Frequency")[0] as XmlElement;
+            skillConfig.frequency_cfg = GetUpgradeCfg(element);
+            element = item.GetElementsByTagName("Damage")[0] as XmlElement;
+            skillConfig.damage_cfg = GetUpgradeCfg(element);
+            element = item.GetElementsByTagName("Range")[0] as XmlElement;
+            skillConfig.range_cfg = GetUpgradeCfg(element);
+
+            element = item.GetElementsByTagName("Ex")[0] as XmlElement;
+            if (element != null)
+            {
+                skillConfig.Ex_conf = GetExCfg(element);
+            }
+
+            // Owner logic
+            string attribute = item.GetAttribute("ownerType");
+            if (attribute == "Avatar")
+            {
+                skillConfig.owner_avatar = GetAvatarTypeFromCfg(item.GetAttribute("owner"));
+                Skill_Avatar_Set[skillConfig.skill_name] = skillConfig;
+            }
+            else if (attribute == "Monster")
+            {
+                skillConfig.owner_enmey = GetEnemyTypeFromCfg(item.GetAttribute("owner"));
+                Skill_Monster_Set[skillConfig.skill_name] = skillConfig;
+            }
+        }
+
+        XmlElement xmlElement2 = documentElement.GetElementsByTagName("SkillUpPriceCfg")[0] as XmlElement;
+        Skill_Up_Price_Info.ParaA = float.Parse(xmlElement2.GetAttribute("ParaA"));
+        Skill_Up_Price_Info.ParaB = float.Parse(xmlElement2.GetAttribute("ParaB"));
+        Skill_Up_Price_Info.ParaK = float.Parse(xmlElement2.GetAttribute("ParaK"));
+    }
+
+
+    public void LoadLotteryConfig()
 	{
 		string xml = LoadConfigFile("LotteryCfg");
 		XmlDocument xmlDocument = new XmlDocument();
@@ -472,8 +481,8 @@ public class GameConfig : MonoBehaviour
 				weaponConfig.sell_price = new GameDataInt(int.Parse(item.GetAttribute("sellPrice")));
 			}
 			weaponConfig.exist_state = (WeaponExistState)int.Parse(item.GetAttribute("existState"));
-			weaponConfig.is_secondary = int.Parse(item.GetAttribute("secondaryWeapon")) == 1;
-			weaponConfig.owner = GetAvatarTypeFromCfg(item.GetAttribute("owner"));
+            //weaponConfig.is_secondary = item.GetAttribute("secondaryWeapon") == "1";
+            weaponConfig.owner = GetAvatarTypeFromCfg(item.GetAttribute("owner"));
 			XmlElement element = item.GetElementsByTagName("Frequency")[0] as XmlElement;
 			weaponConfig.frequency_conf = GetUpgradeCfg(element);
 			element = item.GetElementsByTagName("stretchMaxRange")[0] as XmlElement;
@@ -623,7 +632,7 @@ public class GameConfig : MonoBehaviour
 				avatarConfig.unlockDay = int.Parse(item.GetAttribute("unlockDay"));
 			}
 			avatarConfig.exist_state = (AvatarExistState)int.Parse(item.GetAttribute("existState"));
-			avatarConfig.secondary_equipment = item.GetAttribute("secondaryWeapon");
+			//avatarConfig.secondary_equipment = item.GetAttribute("secondaryWeapon");
 			if (item.HasAttribute("firstSkill"))
 			{
 				avatarConfig.first_skill = item.GetAttribute("firstSkill");
@@ -638,10 +647,10 @@ public class GameConfig : MonoBehaviour
 			avatarConfig.armor_conf = GetUpgradeCfg(element);
 			element = item.GetElementsByTagName("Ex")[0] as XmlElement;
 			avatarConfig.extension_conf = GetUpgradeCfg(element);
-			foreach (XmlElement item2 in item.GetElementsByTagName("SecondWeapon"))
+			/*foreach (XmlElement item2 in item.GetElementsByTagName("SecondWeapon"))
 			{
 				avatarConfig.Second_Weapon_Cfg[int.Parse(item2.GetAttribute("level"))] = item2.GetAttribute("weapon");
-			}
+			}*/
 			AvatarConfig_Set[avatarConfig.avatar_type] = avatarConfig;
 		}
 		foreach (XmlElement item3 in documentElement.GetElementsByTagName("AvatarExp"))
@@ -905,7 +914,7 @@ public class GameConfig : MonoBehaviour
 		XmlElement xmlElement4 = documentElement.GetElementsByTagName("HpPackage")[0] as XmlElement;
 		hp_package_ratio = float.Parse(xmlElement4.GetAttribute("ratio"));
 		xmlElement4 = documentElement.GetElementsByTagName("ButtletPackage")[0] as XmlElement;
-		bullet_package_ratio = float.Parse(xmlElement4.GetAttribute("ratio"));
+		//bullet_package_ratio = float.Parse(xmlElement4.GetAttribute("ratio"));
 		xmlElement4 = documentElement.GetElementsByTagName("CashPackage")[0] as XmlElement;
 		cash_package_val = int.Parse(xmlElement4.GetAttribute("val"));
 	}
@@ -1129,6 +1138,9 @@ public class GameConfig : MonoBehaviour
 		case "HalloweenSub":
 			result = EnemyType.E_HALLOWEEN_SUB;
 			break;
+        case "HalloweenSub_E":
+			result = EnemyType.E_HALLOWEEN_SUB_E;
+			break;
 		case "Shark":
 			result = EnemyType.E_SHARK;
 			break;
@@ -1139,7 +1151,7 @@ public class GameConfig : MonoBehaviour
 		return result;
 	}
 
-	public WeaponType GetWeaponTypeFromCfg(string type_name)
+    public WeaponType GetWeaponTypeFromCfg(string type_name)
 	{
 		WeaponType result = WeaponType.NoGun;
 		switch (type_name)

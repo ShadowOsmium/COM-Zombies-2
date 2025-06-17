@@ -1,5 +1,5 @@
 <EnemyWaveCfg>
-  <IntervalCfg wave="3" line="1" />
+  <IntervalCfg wave="6" line="1" />
   <WaveNormal level="1">  
     <enemy type="Zombie_Commis" count="1" spawn="grave"/>  
     <enemy type="Zombie_Commis" count="2" spawn="grave"/>

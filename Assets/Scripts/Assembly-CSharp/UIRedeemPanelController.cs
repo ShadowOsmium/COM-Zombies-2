@@ -119,7 +119,7 @@ public class UIRedeemPanelController : MonoBehaviour
 		hashtable["gcode"] = cur_redeem_code;
 		string s = JsonMapper.ToJson(hashtable);
 		byte[] post_data = XXTEAUtils.Encrypt(Encoding.UTF8.GetBytes(s), Encoding.UTF8.GetBytes("abcd@@##980[]L>."));
-		wwwClient.Instance.SendHttpRequest(GameData.Instance.redeem_get_url, post_data, OnRedeemCodeFinish, OnRedeemCodeError, "sendCode");
+		//wwwClient.Instance.SendHttpRequest(GameData.Instance.redeem_get_url, post_data, OnRedeemCodeFinish, OnRedeemCodeError, "sendCode");
 	}
 
 	private void OnRedeemCodeFinish(string action, byte[] result_data)
@@ -170,7 +170,7 @@ public class UIRedeemPanelController : MonoBehaviour
 		hashtable["gcode"] = cur_redeem_code;
 		string s = JsonMapper.ToJson(hashtable);
 		byte[] post_data = XXTEAUtils.Encrypt(Encoding.UTF8.GetBytes(s), Encoding.UTF8.GetBytes("abcd@@##980[]L>."));
-		wwwClient.Instance.SendHttpRequest(GameData.Instance.redeem_accept_url, post_data, OnAcceptRedeemCodeFinish, OnAccpetRedeemCodeError, "acceptCode");
+		//wwwClient.Instance.SendHttpRequest(GameData.Instance.redeem_accept_url, post_data, OnAcceptRedeemCodeFinish, OnAccpetRedeemCodeError, "acceptCode");
 	}
 
 	private void OnAcceptRedeemCodeFinish(string action, byte[] result_data)
@@ -197,7 +197,7 @@ public class UIRedeemPanelController : MonoBehaviour
 		if (text2 == "0")
 		{
 			int intVal = cur_redeem_val.GetIntVal();
-			GameData.Instance.total_crystal += (int)((float)intVal * GameData.Instance.redeem_change_ratio);
+			//GameData.Instance.total_crystal += (int)((float)intVal * GameData.Instance.redeem_change_ratio);
 			GameData.Instance.SaveData();
 			GameCoverUIController.Instance.ShowMask(false);
 			GameCoverUIController.Instance.redeem_award_panel.Show();

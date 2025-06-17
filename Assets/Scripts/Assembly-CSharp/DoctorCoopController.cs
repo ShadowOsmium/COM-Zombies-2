@@ -63,41 +63,50 @@ public class DoctorCoopController : PlayerCoopController
 		Vector3 vector = Camera.main.ScreenToWorldPoint(new Vector3(sightScreenPos.x + fireOffset.x, sightScreenPos.y + fireOffset.y, 100f));
 		Ray ray = new Ray(Camera.main.transform.position, vector - Camera.main.transform.position);
 		RaycastHit raycastHit = default(RaycastHit);
-		RaycastHit[] array = Physics.RaycastAll(ray, 1000f, (1 << PhysicsLayer.ENEMY) | (1 << PhysicsLayer.WALL) | (1 << PhysicsLayer.FLOOR) | (1 << PhysicsLayer.DYNAMIC_SCENE) | (1 << PhysicsLayer.ANIMATION_SCENE) | (1 << PhysicsLayer.WALL_METAL) | (1 << PhysicsLayer.WALL_WOOD) | (1 << PhysicsLayer.WOOD_BOX));
-		float num = 1000000f;
-		RaycastHit[] array2 = array;
-		for (int i = 0; i < array2.Length; i++)
-		{
-			RaycastHit raycastHit2 = array2[i];
-			Vector3 zero = Vector3.zero;
-			if (((raycastHit2.collider.gameObject.layer == PhysicsLayer.ENEMY) ? base.transform.InverseTransformPoint(raycastHit2.transform.position) : ((raycastHit2.collider.gameObject.layer != PhysicsLayer.PLAYER) ? base.transform.InverseTransformPoint(raycastHit2.point) : base.transform.InverseTransformPoint(raycastHit2.collider.transform.position))).z > 0f)
-			{
-				float sqrMagnitude = (raycastHit2.point - base.transform.position).sqrMagnitude;
-				if (sqrMagnitude < num)
-				{
-					raycastHit = raycastHit2;
-					num = sqrMagnitude;
-				}
-			}
-		}
-		if (raycastHit.collider != null && raycastHit.collider.gameObject.layer == PhysicsLayer.ENEMY)
-		{
-			EnemyController component = raycastHit.collider.GetComponent<EnemyController>();
-			if (component != null)
-			{
-				SkillEnchantController skillEnchantController = skill_set["Enchant"] as SkillEnchantController;
-				if (skillEnchantController.EnableEnchantMonst(component.enemy_data.enemy_type))
-				{
-					GameObject gameObject = Object.Instantiate(enchant_eff_ref, component.centroid, Quaternion.identity) as GameObject;
-					gameObject.transform.parent = component.gameObject.transform;
-				}
-				else
-				{
-					Debug.Log(string.Concat("Enchant monster:", component.enemy_data.enemy_type, " failed."));
-				}
-			}
-		}
-		if (enchant_gun_fire_ori.InverseTransformPoint(GameSceneController.Instance.main_camera.target.position).z > 1f)
+        int enemyLayerMask = 1 << LayerMask.NameToLayer("Enemy");
+        RaycastHit[] hits = Physics.RaycastAll(ray, 1000f, enemyLayerMask);
+
+        int enemiesHit = 0;
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject.layer == PhysicsLayer.ENEMY)
+            {
+                EnemyController enemy = hit.collider.GetComponent<EnemyController>();
+                if (enemy != null)
+                {
+                    SkillEnchantController skillEnchantController = skill_set["Enchant"] as SkillEnchantController;
+                    if (skillEnchantController.EnableEnchantMonst(enemy.enemy_data.enemy_type))
+                    {
+                        enemy.EnchantMonster();
+                        GameObject effect = Instantiate(enchant_eff_ref, enemy.centroid, Quaternion.identity);
+                        effect.transform.parent = enemy.gameObject.transform;
+
+                        enemiesHit++;
+                        if (enemiesHit >= 2) break;
+                    }
+                }
+            }
+        }
+        if (raycastHit.collider != null && raycastHit.collider.gameObject.layer == PhysicsLayer.ENEMY)
+        {
+            EnemyController component = raycastHit.collider.GetComponent<EnemyController>();
+            if (component != null)
+            {
+                SkillEnchantController skillEnchantController = skill_set["Enchant"] as SkillEnchantController;
+                if (skillEnchantController.EnableEnchantMonst(component.enemy_data.enemy_type))
+                {
+                    component.EnchantMonster();
+                    GameObject gameObject = Object.Instantiate(enchant_eff_ref, component.centroid, Quaternion.identity) as GameObject;
+                    gameObject.transform.parent = component.gameObject.transform;
+                }
+                else
+                {
+                    Debug.Log(string.Concat("Enchant monster:", component.enemy_data.enemy_type, " failed."));
+                }
+            }
+        }
+        if (enchant_gun_fire_ori.InverseTransformPoint(GameSceneController.Instance.main_camera.target.position).z > 1f)
 		{
 			GameObject gameObject2 = Object.Instantiate(enchant_bullet_ref, enchant_gun_fire_ori.position, enchant_gun_fire_ori.rotation) as GameObject;
 			FireLineScript component2 = gameObject2.GetComponent<FireLineScript>();

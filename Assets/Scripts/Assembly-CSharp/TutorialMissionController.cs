@@ -37,7 +37,11 @@ public class TutorialMissionController : MissionController
 		guideController.Show(new MoveGuide(guideController));
 		yield return 1;
 		SpwanZombiesFromNest(EnemyType.E_ZOMBIE, zombie_nest_array[0]);
-		yield return new WaitForSeconds(3f);
+        SpwanZombiesFromNest(EnemyType.E_ZOMBIE, zombie_nest_array[0]);
+        SpwanZombiesFromNest(EnemyType.E_ZOMBIE, zombie_nest_array[0]);
+        SpwanZombiesFromNest(EnemyType.E_ZOMBIE, zombie_nest_array[0]);
+        SpwanZombiesFromNest(EnemyType.E_ZOMBIE, zombie_nest_array[0]);
+        yield return new WaitForSeconds(3f);
 		Vector3 arrowPosition = Vector3.zero;
 		while (!EnemyNearPlayer(ref arrowPosition))
 		{

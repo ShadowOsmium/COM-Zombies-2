@@ -1,8 +1,6 @@
 <GameProbsCfg>
   <!--Battlehp-->
   <HpPackage ratio="2" />
-  <!--Battlebulletratio-->
-  <ButtletPackage ratio="0" />
   <!--CashPackage-->
   <CashPackage val="2500" />
   <!--Story-->

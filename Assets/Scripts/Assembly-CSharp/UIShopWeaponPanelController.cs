@@ -95,7 +95,7 @@ public class UIShopWeaponPanelController : UIShopPanelController
 		}
 		else
 		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
+			//UISceneController.Instance.MoneyController.IapPanel.Show();
 		}
 		UpdateWeaponInfo();
 	}
@@ -128,7 +128,7 @@ public class UIShopWeaponPanelController : UIShopPanelController
 		}
 		else
 		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
+			//UISceneController.Instance.MoneyController.IapPanel.Show();
 		}
 		Object.Destroy(msgBox.gameObject);
 	}
@@ -187,7 +187,7 @@ public class UIShopWeaponPanelController : UIShopPanelController
 			}
 			else
 			{
-				UISceneController.Instance.MoneyController.IapPanel.Show();
+				//UISceneController.Instance.MoneyController.IapPanel.Show();
 			}
 		}
 		UpdateWeaponInfo();

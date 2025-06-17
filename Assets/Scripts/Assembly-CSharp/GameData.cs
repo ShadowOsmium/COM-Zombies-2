@@ -985,7 +985,7 @@ public class GameData : MonoBehaviour
                     WeaponIntensifierProbs_Set[key] = gameProb3;
                 }
             }
-            return true; // loaded successfully
+            return true;
         }
         catch (Exception ex)
         {
@@ -994,8 +994,6 @@ public class GameData : MonoBehaviour
         }
     }
 
-
-    // Helper method for parsing int or fallback
     private int ParseOrDefault(string input, int defaultValue)
     {
         int result;
@@ -1010,49 +1008,21 @@ public class GameData : MonoBehaviour
     public bool LoadDailyData()
     {
         string content = string.Empty;
-        string filePath = Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2Daily") + ".bytes";
-
-        if (Utils.FileReadString(filePath, ref content))
+        if (Utils.FileReadString(Utils.SavePath() + MD5Sample.GetMd5String("CoMZ2Daily") + ".bytes", ref content))
         {
             Configure configure = new Configure();
             content = DataDecrypt(content);
             configure.Load(content);
-
             save_date = configure.GetSingle("Save", "SavDate");
-
-            int missionCount = 0;
-            string missionCountStr = configure.GetSingle("Save", "DailyMissionCount");
-            if (missionCountStr != null && int.TryParse(missionCountStr, out missionCount))
+            daily_mission_count = int.Parse(configure.GetSingle("Save", "DailyMissionCount"));
+            if (configure.GetSingle("Save", "LotteryResetCount") != null)
             {
-                daily_mission_count = missionCount;
+                lottery_reset_count = int.Parse(configure.GetSingle("Save", "LotteryResetCount"));
             }
-            else
+            if (configure.GetSingle("Save", "LotteryCount") != null)
             {
-                daily_mission_count = 0; // fallback default
+                lottery_count = int.Parse(configure.GetSingle("Save", "LotteryCount"));
             }
-
-            int resetCount = 0;
-            string resetCountStr = configure.GetSingle("Save", "LotteryResetCount");
-            if (resetCountStr != null && int.TryParse(resetCountStr, out resetCount))
-            {
-                lottery_reset_count = resetCount;
-            }
-            else
-            {
-                lottery_reset_count = 0;
-            }
-
-            int lCount = 0;
-            string lotteryCountStr = configure.GetSingle("Save", "LotteryCount");
-            if (lotteryCountStr != null && int.TryParse(lotteryCountStr, out lCount))
-            {
-                lottery_count = lCount;
-            }
-            else
-            {
-                lottery_count = 0;
-            }
-
             if (save_date != cur_save_date)
             {
                 Debug.Log("Reset DailyMissionCount!");
@@ -1061,13 +1031,10 @@ public class GameData : MonoBehaviour
                 lottery_reset_count = 0;
                 lottery_count = 0;
                 is_daily_cd_crystal = false;
-
                 SaveDailyData();
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -1194,7 +1161,7 @@ public class GameData : MonoBehaviour
     {
         if (WeaponData_Set[weapon_name].exist_state != 0)
         {
-            Debug.Log("Weapon:" + weapon_name + "can not combine,it is already combined.");
+            Debug.Log("Weapon:" + weapon_name + " is combined already");
             return false;
         }
         int[] weaponFragmentProbsCountOrder = GetWeaponFragmentProbsCountOrder(weapon_name);
@@ -1267,20 +1234,159 @@ public class GameData : MonoBehaviour
         last_checked_date_now = currentDateTime;
         next_cd_date = currentDateTime.AddDays(1.0);
         next_cd_date = new DateTime(next_cd_date.Year, next_cd_date.Month, next_cd_date.Day, 0, 0, 0);
+
         Debug.Log("last_checked_date_now:" + last_checked_date_now);
         Debug.Log("next_cd_date:" + next_cd_date);
         Debug.Log(string.Concat("cd:", next_cd_date - last_checked_date_now, " totalSec:", (next_cd_date - last_checked_date_now).TotalSeconds));
-        string date = (cur_save_date = last_checked_date_now.Year.ToString() + last_checked_date_now.Month + last_checked_date_now.Day);
+
+        cur_save_date = last_checked_date_now.ToString("yyyyMMdd");
+        string date = cur_save_date;
+
         daily_mode_enable = true;
+
         if (!LoadDailyData())
         {
             SaveDailyData();
         }
+
         if (reset_nist_time_finish != null)
         {
+            Debug.Log("Calling reset_nist_time_finish...");
             reset_nist_time_finish();
         }
+        else
+        {
+            Debug.LogWarning("reset_nist_time_finish was null!");
+        }
+
         yield break;
+    }
+
+    private const string CooldownStartKey = "CooldownStartTime";
+    private const string CooldownEndKey = "CooldownEndTime";
+
+    public void StartCooldown()
+    {
+        DateTime startTime = DateTime.Now;
+        DateTime endTime = startTime.AddHours(24);
+
+        PlayerPrefs.SetString(CooldownStartKey, startTime.Ticks.ToString());
+        PlayerPrefs.SetString(CooldownEndKey, endTime.Ticks.ToString());
+
+        Debug.Log("Cooldown started at: " + startTime + " | Ends at: " + endTime);
+    }
+
+    public bool IsCooldownComplete()
+    {
+        string savedStartTimeStr = PlayerPrefs.GetString(CooldownStartKey, "");
+        string savedEndTimeStr = PlayerPrefs.GetString(CooldownEndKey, "");
+        long savedStartTimeTicks, savedEndTimeTicks;
+
+        if (!long.TryParse(savedStartTimeStr, out savedStartTimeTicks) ||
+            !long.TryParse(savedEndTimeStr, out savedEndTimeTicks))
+        {
+            Debug.LogWarning("Invalid cooldown timestamps.");
+            return false;
+        }
+
+        DateTime savedStartTime = new DateTime(savedStartTimeTicks);
+        DateTime savedEndTime = new DateTime(savedEndTimeTicks);
+        DateTime currentTime = DateTime.Now;
+
+        if (currentTime < savedStartTime)
+        {
+            Debug.LogWarning("Time rollback detected! Adjusting cooldown.");
+            return false;
+        }
+
+        TimeSpan maxAllowedSkip = TimeSpan.FromDays(7);
+        if ((currentTime - savedStartTime) > maxAllowedSkip)
+        {
+            Debug.LogWarning("Excessive time jump detected! Adjusting cooldown.");
+
+            TimeSpan remainingCooldown = savedEndTime - savedStartTime;
+            DateTime adjustedEndTime = currentTime.Add(remainingCooldown);
+
+            PlayerPrefs.SetString(CooldownEndKey, adjustedEndTime.Ticks.ToString());
+            return false;
+        }
+
+        return currentTime >= savedEndTime;
+    }
+
+
+    private float lastRealTime;
+
+    public void StartTrackingTime()
+    {
+        lastRealTime = Time.realtimeSinceStartup;
+    }
+
+    public void ValidateElapsedTime()
+    {
+        float elapsedRealTime = Time.realtimeSinceStartup - lastRealTime;
+        if (elapsedRealTime < 0)
+        {
+            Debug.LogWarning("System clock changed unexpectedly!");
+        }
+    }
+
+    private void RecordTimeCheckpoint()
+    {
+        DateTime now = DateTime.Now;
+        PlayerPrefs.SetString("LastRecordedTime", now.Ticks.ToString());
+    }
+
+    private void DetectSuspiciousPatterns()
+    {
+        string lastSavedTimeStr = PlayerPrefs.GetString("LastRecordedTime", "");
+        long lastSavedTimeTicks;
+
+        if (!long.TryParse(lastSavedTimeStr, out lastSavedTimeTicks))
+        {
+            Debug.LogWarning("Failed to parse saved time.");
+            return;
+        }
+
+        DateTime lastSavedTime = new DateTime(lastSavedTimeTicks);
+        DateTime currentTime = DateTime.Now;
+
+        if (currentTime < lastSavedTime)
+        {
+            Debug.LogWarning("Time rollback detected!");
+        }
+    }
+
+    private void ValidateOfflineTime()
+    {
+        DateTime lastSavedTime;
+
+        if (!DateTime.TryParse(PlayerPrefs.GetString("LastRecordedTime", ""), out lastSavedTime))
+        {
+            lastSavedTime = DateTime.Now;
+        }
+
+        DateTime currentTime = DateTime.Now;
+
+        if (currentTime < lastSavedTime)
+        {
+            Debug.LogWarning("Time rollback detected! Possible manipulation.");
+        }
+
+        TimeSpan maxAllowedSkip = TimeSpan.FromDays(7);
+        if ((currentTime - lastSavedTime) > maxAllowedSkip)
+        {
+            Debug.LogWarning("Time jump detected! Adjusting cooldown.");
+            PlayerPrefs.SetString("LastRecordedTime", currentTime.Ticks.ToString());
+        }
+
+        PlayerPrefs.SetString("LastRecordedTime", currentTime.ToString());
+    }
+
+    private void CheckForTimeManipulation()
+    {
+        ValidateOfflineTime();
+        DetectSuspiciousPatterns();
     }
 
     public void SetMapMissionList(ref List<QuestInfo> mInfos)
@@ -1335,7 +1441,7 @@ public class GameData : MonoBehaviour
             if (total_crystal < 0)
             {
                 total_crystal = new GameDataInt(0);
-                Debug.LogWarning("Enter daily mission not enough crystal.");
+                Debug.LogWarning("Not enough crystals for daily mission.");
             }
             Instance.daily_mission_count++;
             Instance.SaveDailyData();
@@ -1419,7 +1525,7 @@ public class GameData : MonoBehaviour
         switch (mission_day_type)
         {
             case MissionDayType.Main:
-                result = 1;
+                result = 5;
                 break;
             case MissionDayType.Tutorial:
                 result = GameConfig.Instance.init_crystal;
@@ -1451,7 +1557,7 @@ public class GameData : MonoBehaviour
                 result = GameConfig.Instance.init_voucher;
                 break;
             default:
-                result = 1;
+                result = 5;
                 break;
             case MissionDayType.Main:
                 break;
@@ -1465,11 +1571,11 @@ public class GameData : MonoBehaviour
         {
             return DailyMissionStatus.Free;
         }
-        if (daily_mode_enable && daily_mission_count < 6)
+        if (daily_mode_enable && daily_mission_count < 10)
         {
             return DailyMissionStatus.CrystalEnable;
         }
-        if (daily_mode_enable && daily_mission_count >= 6)
+        if (daily_mode_enable && daily_mission_count >= 10)
         {
             return DailyMissionStatus.CrystalDisenable;
         }
@@ -1653,12 +1759,12 @@ public class GameData : MonoBehaviour
 
     public void OnStatisticsRequestError(string action, byte[] post_data)
     {
-        Debug.Log("OnRequestError");
+        //Debug.Log("OnRequestError");
     }
 
     private void OnApplicationPause(bool pause)
     {
-        Debug.Log("OnApplicationPause:" + pause);
+        //Debug.Log("OnApplicationPause:" + pause);
         if (is_enter_tutorial)
         {
             return;
@@ -1670,8 +1776,8 @@ public class GameData : MonoBehaviour
             if (timeSpan >= TimeSpan.FromMinutes(120.0))
             {
                 Debug.Log("Long time no see.");
-                TAudioManager.instance.soundVolume = 1f;
-                TAudioManager.instance.musicVolume = 1f;
+                TAudioManager.instance.soundVolume = 0.5f;
+                TAudioManager.instance.musicVolume = 0.5f;
                 Time.timeScale = 1f;
                 LoadingUIController.FinishedLoading();
                 Application.LoadLevel("GameCover");

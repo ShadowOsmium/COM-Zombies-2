@@ -57,7 +57,7 @@ public class UIMapMissionPanelController : UIShopPanelController
 				num++;
 			}
 		}
-		Debug.Log(QuestInfo.avatar);
+		//Debug.Log(QuestInfo.avatar);
 		if (QuestInfo.avatar != AvatarType.None)
 		{
 			CreateAvatarReward(QuestInfo.avatar.ToString(), num);

@@ -103,11 +103,11 @@ public class UIShopSkillDetailPanelController : UIShopPanelController
 		if (Mathf.Abs(cur_skill.config.life_time_cfg.base_data - cur_skill.config.life_time_cfg.max_data) > diff_val)
 		{
 			gameObject = skill_info_list[num++];
-			gameObject.GetComponent<TUILabel>().Text = "Life Span:" + cur_skill.life_time.ToString("f1");
+			gameObject.GetComponent<TUILabel>().Text = "Life Span: " + cur_skill.life_time.ToString("f1");
 			if (cur_skill.level < cur_skill.config.max_level)
 			{
 				gameObject = skill_info_list_next[num2++];
-				gameObject.GetComponent<TUILabel>().Text = "Life Span:" + cur_skill.life_time_next.ToString("f1");
+				gameObject.GetComponent<TUILabel>().Text = "Life Span: " + cur_skill.life_time_next.ToString("f1");
 			}
 		}
 		if (Mathf.Abs(cur_skill.config.cd_time_cfg.base_data - cur_skill.config.cd_time_cfg.max_data) > diff_val)
@@ -187,7 +187,7 @@ public class UIShopSkillDetailPanelController : UIShopPanelController
 		}
 		else
 		{
-			UISceneController.Instance.MoneyController.IapPanel.Show();
+			//UISceneController.Instance.MoneyController.IapPanel.Show();
 		}
 	}
 

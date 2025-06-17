@@ -2,14 +2,14 @@ using System.Collections;
 
 public class Configure
 {
-	private enum ValueType
+	public enum ValueType
 	{
 		Single,
 		Array,
 		Array2
 	}
 
-	private class Value
+	public class Value
 	{
 		public string key;
 
@@ -408,7 +408,7 @@ public class Configure
 		return null;
 	}
 
-	private Value GetValue(string section, string key)
+	public Value GetValue(string section, string key)
 	{
 		Section section2 = GetSection(section);
 		if (section2 == null)

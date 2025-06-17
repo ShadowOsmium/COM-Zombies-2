@@ -99,81 +99,99 @@ public class AvatarData
 		}
 	}
 
-	public void ResetData()
-	{
-		float num = level - 1;
-		move_speed = config.speed_conf.base_data + num * (config.speed_conf.max_data - config.speed_conf.base_data) / (float)(config.max_level - 1);
-		num = damage_level - 1;
-		damage_val = config.damage_conf.base_data + num * (config.damage_conf.max_data - config.damage_conf.base_data) / (float)(config.max_level - 1);
-		int num2 = armor_level - 1;
-		armor_val = config.armor_conf.base_data + (float)num2 * (config.armor_conf.max_data - config.armor_conf.base_data) / (float)(config.max_level - 1);
-		float paraA = GameConfig.Instance.Avatar_Hp_Up_Info.ParaA;
-		float paraB = GameConfig.Instance.Avatar_Hp_Up_Info.ParaB;
-		float paraC = GameConfig.Instance.Avatar_Hp_Up_Info.ParaC;
-		if (hp_level == 1)
-		{
-			cur_hp = (hp_capacity = config.hp_conf.base_data);
-		}
-		else
-		{
-			cur_hp = (hp_capacity = config.hp_conf.base_data + (paraA * Mathf.Pow(hp_level, 2f) + paraB * (float)hp_level + paraC) * config.hp_ratio);
-		}
-		reload_speed_val = config.reload_ratio;
-		if (hp_level < config.max_level)
-		{
-			int num3 = hp_level + 1;
-			hp_capacity_next = config.hp_conf.base_data + (paraA * Mathf.Pow(num3, 2f) + paraB * (float)num3 + paraC) * config.hp_ratio;
-		}
-		else
-		{
-			hp_capacity_next = hp_capacity;
-		}
-		if (damage_level < config.max_level)
-		{
-			num = damage_level - 1 + 1;
-			damage_val_next = config.damage_conf.base_data + num * (config.damage_conf.max_data - config.damage_conf.base_data) / (float)(config.max_level - 1);
-		}
-		else
-		{
-			armor_val_next = armor_val;
-		}
-		if (armor_level < config.max_level)
-		{
-			num = armor_level - 1 + 1;
-			armor_val_next = config.armor_conf.base_data + num * (config.armor_conf.max_data - config.armor_conf.base_data) / (float)(config.max_level - 1);
-		}
-		else
-		{
-			armor_val_next = armor_val;
-		}
-		avatar_worth = 0;
-		for (int i = 1; i <= hp_level - 1; i++)
-		{
-			avatar_worth += GetUpgradeHpPrice(i);
-		}
-		for (int j = 1; j <= damage_level - 1; j++)
-		{
-			avatar_worth += GetUpgradeDamagePrice(j);
-		}
-		for (int k = 1; k <= armor_level - 1; k++)
-		{
-			avatar_worth += GetUpgradeArmorPrice(k);
-		}
-		if (avatar_worth >= config.avatar_worth_2)
-		{
-			avatar_state = AvatarState.Super;
-		}
-		else if (avatar_worth >= config.avatar_worth_1)
-		{
-			avatar_state = AvatarState.Strong;
-		}
-		else
-		{
-			avatar_state = AvatarState.Normal;
-		}
-	}
+    public void ResetData()
+    {
+        level = Mathf.Clamp(level, 1, config.max_level);
+        damage_level = Mathf.Clamp(damage_level, 1, config.max_level);
+        armor_level = Mathf.Clamp(armor_level, 1, config.max_level);
+        hp_level = Mathf.Clamp(hp_level, 1, config.max_level);
 
-	public bool Upgrade()
+        int safeDenominator = (config.max_level - 1) > 0 ? (config.max_level - 1) : 1;
+
+        float moveNum = level - 1;
+        move_speed = config.speed_conf.base_data + moveNum * (config.speed_conf.max_data - config.speed_conf.base_data) / (float)safeDenominator;
+        move_speed = Mathf.Clamp(move_speed, config.speed_conf.base_data, config.speed_conf.max_data);
+
+        float damageBase = config.damage_conf.base_data;
+        float damageRange = config.damage_conf.max_data - damageBase;
+        damage_val = damageBase + (damage_level - 1) * (damageRange / (float)safeDenominator);
+        damage_val = Mathf.Clamp(damage_val, damageBase, damageBase + damageRange * 10f);
+
+        float armorBase = config.armor_conf.base_data;
+        float armorRange = config.armor_conf.max_data - armorBase;
+        armor_val = armorBase + (armor_level - 1) * (armorRange / (float)safeDenominator);
+        armor_val = Mathf.Clamp(armor_val, armorBase, armorBase + armorRange * 10f);
+
+        float paraA = GameConfig.Instance.Avatar_Hp_Up_Info.ParaA;
+        float paraB = GameConfig.Instance.Avatar_Hp_Up_Info.ParaB;
+        float paraC = GameConfig.Instance.Avatar_Hp_Up_Info.ParaC;
+
+        float calculatedHp = config.hp_conf.base_data + (paraA * Mathf.Pow(hp_level, 2f) + paraB * hp_level + paraC) * config.hp_ratio;
+        hp_capacity = calculatedHp;
+        cur_hp = hp_capacity;
+
+        reload_speed_val = config.reload_ratio;
+
+        if (hp_level < config.max_level)
+        {
+            int nextLevel = hp_level + 1;
+            hp_capacity_next = config.hp_conf.base_data + (paraA * Mathf.Pow(nextLevel, 2f) + paraB * nextLevel + paraC) * config.hp_ratio;
+        }
+        else
+        {
+            hp_capacity_next = hp_capacity;
+        }
+
+        if (damage_level < config.max_level)
+        {
+            int nextDamageLevel = damage_level;
+            damage_val_next = damageBase + (nextDamageLevel) * (damageRange / (float)safeDenominator);
+        }
+        else
+        {
+            damage_val_next = damage_val;
+        }
+
+        if (armor_level < config.max_level)
+        {
+            int nextArmorLevel = armor_level;
+            armor_val_next = armorBase + (nextArmorLevel) * (armorRange / (float)safeDenominator);
+        }
+        else
+        {
+            armor_val_next = armor_val;
+        }
+
+        avatar_worth = 0;
+        for (int i = 1; i <= hp_level - 1; i++)
+        {
+            avatar_worth += GetUpgradeHpPrice(i);
+        }
+        for (int j = 1; j <= damage_level - 1; j++)
+        {
+            avatar_worth += GetUpgradeDamagePrice(j);
+        }
+        for (int k = 1; k <= armor_level - 1; k++)
+        {
+            avatar_worth += GetUpgradeArmorPrice(k);
+        }
+
+        if (avatar_worth >= config.avatar_worth_2)
+        {
+            avatar_state = AvatarState.Super;
+        }
+        else if (avatar_worth >= config.avatar_worth_1)
+        {
+            avatar_state = AvatarState.Strong;
+        }
+        else
+        {
+            avatar_state = AvatarState.Normal;
+        }
+        cur_hp = hp_capacity;
+    }
+
+    public bool Upgrade()
 	{
 		if (level < config.max_level && GameData.Instance.total_voucher >= UpgradePrice)
 		{
