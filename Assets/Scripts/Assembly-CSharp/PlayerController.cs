@@ -339,28 +339,36 @@ public class PlayerController : ObjectController
 		is_myself = true;
 	}
 
-	protected override void Start()
-	{
-		GameSceneController.Instance.player_controller = this;
-		//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop)
-		//{
-		//	tnet_user = tnetObj.Myself;
-		//	base.gameObject.GetComponent<NetworkTransformSender>().StartSendTransform();
-		//	player_id = new PlayerID(avatar_data.avatar_type, avatar_data.avatar_state, GameData.Instance.NickName, tnet_user.Id);
-		//}
-		//else if (GameData.Instance.cur_game_type == GameData.GamePlayType.Normal)
-		//{
-			tnet_user = new TNetUser(0, string.Empty);
-			player_id = new PlayerID(avatar_data.avatar_type, avatar_data.avatar_state, GameData.Instance.NickName, 0);
-		//}
-		GameSceneController.Instance.Player_Set.Add(tnet_user, this);
-		GameSceneController.Instance.Player_damage_Set.Add(player_id, 0f);
-		Fire_Light_Wall.enabled = false;
-		Fire_Light_Player.enabled = false;
-		controller_type = ControllerType.Player;
-	}
+    protected override void Start()
+    {
+        GameSceneController.Instance.player_controller = this;
 
-	protected override void Update()
+        tnet_user = new TNetUser(0, string.Empty);
+
+        string nick = GameData.Instance.NickName;
+        player_id = new PlayerID(avatar_data.avatar_type, avatar_data.avatar_state, nick, 0);
+
+        // Optionally set the GameObject name for clarity/debugging
+        gameObject.name = nick;
+
+        // Add the player to the Player_Set dictionary
+        if (!GameSceneController.Instance.Player_Set.ContainsKey(tnet_user))
+        {
+            GameSceneController.Instance.Player_Set.Add(tnet_user, this);
+        }
+
+        // Add the player to the damage dictionary
+        if (!GameSceneController.Instance.Player_damage_Set.ContainsKey(player_id))
+        {
+            GameSceneController.Instance.Player_damage_Set.Add(player_id, 0f);
+        }
+
+        Fire_Light_Wall.enabled = false;
+        Fire_Light_Player.enabled = false;
+        controller_type = ControllerType.Player;
+    }
+
+    protected override void Update()
 	{
 		if (Time.deltaTime == 0f || Time.timeScale == 0f)
 		{
@@ -771,7 +779,7 @@ public class PlayerController : ObjectController
 
 	public virtual bool CouldUseSecondaryWeapon()
 	{
-		return false;
+		return true;
 	}
 
 	public void ResetFireInterval()

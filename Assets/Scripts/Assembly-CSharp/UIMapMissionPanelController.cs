@@ -23,7 +23,7 @@ public class UIMapMissionPanelController : UIShopPanelController
 		{
 			SceneImage.texture = "panel_scene_Lab";
 		}
-		else
+        else
 		{
 			SceneImage.texture = "panel_scene_" + QuestInfo.scene_name;
 		}

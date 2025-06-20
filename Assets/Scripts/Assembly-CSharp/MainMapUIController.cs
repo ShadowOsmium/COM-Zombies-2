@@ -98,7 +98,46 @@ public class MainMapUIController : MonoBehaviour
 		}
 	}
 
-	public void OnMainMissionButton(TUIControl control, int eventType, float wparam, float lparam, object data)
+    public void OnEndlessMissionButton(TUIControl control, int eventType, float wparam, float lparam, object data)
+    {
+        if (eventType == 3)
+        {
+            // Force cur_quest_info to Endless mission info:
+            GameData.Instance.cur_quest_info = new QuestInfo();
+            GameData.Instance.cur_quest_info.mission_type = MissionType.Endless;          // your endless mission type enum
+            GameData.Instance.cur_quest_info.mission_day_type = MissionDayType.Endless;  // force endless day type
+            GameData.Instance.cur_quest_info.scene_name = "Church";                      // force Church scene
+
+            HidePanels();
+            mission_info_panel.Show();
+            mission_info_panel.mission_title.Text = "Endless";
+
+            Debug.Log("mission comment: Endless mission forced, scene: Church");
+        }
+    }
+
+
+    public void OnEndlessMissionGoButton(TUIControl control, int eventType, float wparam, float lparam, object data)
+    {
+        if (eventType != 3)
+        {
+            return;
+        }
+
+        Debug.Log("OnEndlessMissionGoButton! Loading Church scene...");
+
+        if (fade_panel != null)
+        {
+            GameData.Instance.loading_to_scene = "Church";
+
+            // Also ensure mission_day_type is Endless for tracking
+            GameData.Instance.cur_quest_info.mission_day_type = MissionDayType.Endless;
+
+            fade_panel.FadeOut("Loading");
+        }
+    }
+
+    public void OnMainMissionButton(TUIControl control, int eventType, float wparam, float lparam, object data)
 	{
 		if (eventType == 3)
 		{
@@ -146,7 +185,7 @@ public class MainMapUIController : MonoBehaviour
 		}
 	}
 
-	private void ResetCurNistTime()
+    private void ResetCurNistTime()
 	{
 		Debug.Log("ResetCurNistTime...");
 		StartCoroutine(GameData.Instance.ResetCurServerTime());

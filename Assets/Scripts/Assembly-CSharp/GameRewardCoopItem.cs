@@ -32,7 +32,8 @@ public class GameRewardCoopItem : MonoBehaviour
 
 	public void Init(GameRewardCoop reward)
 	{
-		user_icon.texture = GameConfig.Instance.AvatarConfig_Set[reward.avatar_type].avatar_name + "_0" + (int)reward.avatar_state + "_icon";
+        Debug.Log("Init reward UI: player=" + reward.nick_name + ", money_count=" + reward.money_count);
+        user_icon.texture = GameConfig.Instance.AvatarConfig_Set[reward.avatar_type].avatar_name + "_0" + (int)reward.avatar_state + "_icon";
 		user_name.Text = reward.nick_name;
 		user_damage.Text = reward.damage.ToString();
 		if (reward.money_type == GameRewardCoop.RewardMoneyType.CASH)

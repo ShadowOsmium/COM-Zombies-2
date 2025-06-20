@@ -6,6 +6,7 @@ namespace CoMZ2
 		Main,
 		Side,
 		Daily,
-		Tutorial
+		Tutorial,
+        Endless
 	}
 }

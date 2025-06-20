@@ -1,4 +1,6 @@
 using CoMZ2;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemyData
 {
@@ -8,7 +10,9 @@ public class EnemyData
 
 	public float move_speed;
 
-	public float hp_capacity;
+    private Dictionary<GameObject, float> damageDoneByPlayer = new Dictionary<GameObject, float>();
+
+    public float hp_capacity;
 
 	public float cur_hp;
 
@@ -49,24 +53,67 @@ public class EnemyData
 		loot_cash = (exp = (int)(GameSceneController.Instance.enemy_standard_reward * config.reward_ratio));
 	}
 
-	public static EnemyData CreateData(EnemyConfig config)
+    private static readonly HashSet<EnemyType> BossTypes = new HashSet<EnemyType>
+{
+    EnemyType.E_FATCOOK,
+    EnemyType.E_FATCOOK_E,
+    EnemyType.E_HAOKE_A,
+    EnemyType.E_HAOKE_B,
+    EnemyType.E_WRESTLER,
+    EnemyType.E_WRESTLER_E,
+    EnemyType.E_HALLOWEEN,
+    EnemyType.E_HALLOWEEN_E,
+    EnemyType.E_HALLOWEEN_SUB,
+    EnemyType.E_HALLOWEEN_SUB_E,
+    EnemyType.E_SHARK,
+    EnemyType.E_SHARK_E,
+};
+
+    public static EnemyData CreateData(EnemyConfig config)
 	{
 		EnemyData enemyData = new EnemyData();
 		enemyData.InitData(config);
 		return enemyData;
 	}
 
-	public bool OnInjured(float damage)
-	{
-		if (damage > 0f)
-		{
-			cur_hp -= damage;
-			if (cur_hp <= 0f)
-			{
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
+    public bool OnInjured(float damage, ObjectController attacker)
+    {
+        if (damage > 0f)
+        {
+            // === COOP BOSS DAMAGE TRACKING ===
+            if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && attacker != null)
+            {
+                EnemyType type = this.enemy_type;
+
+                if (type == EnemyType.E_FATCOOK || type == EnemyType.E_FATCOOK_E ||
+                    type == EnemyType.E_HAOKE_A || type == EnemyType.E_HAOKE_B ||
+                    type == EnemyType.E_WRESTLER || type == EnemyType.E_WRESTLER_E ||
+                    type == EnemyType.E_HALLOWEEN || type == EnemyType.E_HALLOWEEN_E ||
+                    type == EnemyType.E_HALLOWEEN_SUB || type == EnemyType.E_HALLOWEEN_SUB_E ||
+                    type == EnemyType.E_SHARK || type == EnemyType.E_SHARK_E)
+                {
+                    string playerName = attacker.name;
+
+                    if (GameSceneController.Instance.boss_damage_record == null)
+                        GameSceneController.Instance.boss_damage_record = new Dictionary<string, float>();
+
+                    var dict = GameSceneController.Instance.boss_damage_record;
+                    if (!dict.ContainsKey(playerName))
+                        dict[playerName] = 0f;
+
+                    dict[playerName] += damage;
+
+                    int reward = Mathf.FloorToInt(dict[playerName] / 10f);
+                    Debug.Log("game_reward: " + playerName + " damage:" + dict[playerName] + " money:" + reward);
+                }
+            }
+            // === END TRACKING ===
+
+            cur_hp -= damage;
+            return cur_hp <= 0f;
+        }
+
+        return false;
+    }
 }
+

@@ -51,7 +51,9 @@ public class GameConfig : MonoBehaviour
 
 	public string time_mission_comment = string.Empty;
 
-	public string convoy_mission_comment = string.Empty;
+    public string endless_mission_comment = string.Empty;
+
+    public string convoy_mission_comment = string.Empty;
 
 	public string res_mission_comment = string.Empty;
 
@@ -265,7 +267,8 @@ public class GameConfig : MonoBehaviour
 		convoy_mission_comment = string.Empty;
 		res_mission_comment = string.Empty;
 		boss_mission_comment = string.Empty;
-		Main_Quest_Difficulty_Set = new Dictionary<int, MainQuestDifficultyInfo>();
+        endless_mission_comment = string.Empty;
+        Main_Quest_Difficulty_Set = new Dictionary<int, MainQuestDifficultyInfo>();
 		Side_Quest_Hp_Difficulty_Set = new Dictionary<int, SideQuestHpDifficultyInfo>();
 		Side_Quest_Dmg_Difficulty_Set = new Dictionary<int, SideQuestDmgDifficultyInfo>();
 		Daily_Quest_Hp_Difficulty_Set = new Dictionary<int, SideQuestHpDifficultyInfo>();
@@ -1019,9 +1022,11 @@ public class GameConfig : MonoBehaviour
 		convoy_mission_comment = xmlElement2.GetAttribute("comment");
 		xmlElement2 = documentElement.GetElementsByTagName("BossQuest")[0] as XmlElement;
 		boss_mission_comment = xmlElement2.GetAttribute("comment");
-	}
+        xmlElement2 = documentElement.GetElementsByTagName("EndlessQuest")[0] as XmlElement;
+        endless_mission_comment = xmlElement2.GetAttribute("comment");
+    }
 
-	public void LoadSideQuestSpareConfig()
+    public void LoadSideQuestSpareConfig()
 	{
 		string xml = LoadConfigFile("SideQuestSpareCfg");
 		XmlDocument xmlDocument = new XmlDocument();

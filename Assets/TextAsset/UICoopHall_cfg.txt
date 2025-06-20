@@ -383,10 +383,10 @@
 				</FrameInfo>
 				<FrameInfo>
 					<frameName>big_boss_icon_0</frameName>
-					<x>737</x>
-					<y>154</y>
-					<width>240</width>
-					<height>240</height>
+					<x>742</x>
+					<y>159</y>
+					<width>226</width>
+					<height>225</height>
 				</FrameInfo>
 				<FrameInfo>
 					<frameName>big_boss_icon_1</frameName>
@@ -415,6 +415,13 @@
 					<y>142</y>
 					<width>240</width>
 					<height>240</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>big_boss_icon_5</frameName>
+					<x>791</x>
+					<y>915</y>
+					<width>226</width>
+					<height>225</height>
 				</FrameInfo>
 				<FrameInfo>
 					<frameName>touxiang_ditu_dianji</frameName>

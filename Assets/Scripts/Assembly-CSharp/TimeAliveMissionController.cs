@@ -134,8 +134,8 @@ public class TimeAliveMissionController : MissionController
 		}
 	}
 
-	public override void CaculateDifficulty()
-	{
-		mission_life_time = 180f;
-	}
+    public override void CaculateDifficulty()
+    {
+        mission_life_time = float.MaxValue;
+    }
 }

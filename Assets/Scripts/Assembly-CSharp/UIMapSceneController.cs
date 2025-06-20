@@ -10,7 +10,9 @@ public class UIMapSceneController : UISceneController
 
 	public UIShopPanelController MissionPanel;
 
-	public UIShopPanelController MissionDailyPanel;
+    public UIShopPanelController EndlessMissionPanel;
+
+    public UIShopPanelController MissionDailyPanel;
 
 	public UIShopPanelController NickNamePanel;
 
@@ -18,7 +20,9 @@ public class UIMapSceneController : UISceneController
 
 	public Transform coop_trans;
 
-	public List<Transform> mission_icon_trans_list;
+    public Transform endless_trans;
+
+    public List<Transform> mission_icon_trans_list;
 
 	public new static UIMapSceneController Instance
 	{

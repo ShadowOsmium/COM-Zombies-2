@@ -298,7 +298,7 @@ public class HalloweenController : EnemyController
         //	num = player_damage_Set[player_id];
         //	dictionary3[key3] = num + damage;
         //}
-        if (enemy_data.OnInjured(damage))
+        if (enemy_data.OnInjured(damage, player.GetComponent<ObjectController>()))
         {
             GameSceneController.Instance.UpdateEnemyDeathInfo(enemy_data.enemy_type, 1);
             OnDead(damage, weapon, player, hit_point, hit_normal);

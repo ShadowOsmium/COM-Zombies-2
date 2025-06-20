@@ -18,7 +18,9 @@ public class GameSceneController : MonoBehaviour
 
 	public MissionController mission_controller;
 
-	public ShooterGameCamera main_camera;
+    public Dictionary<GameObject, float> PlayerDamageToBoss = new Dictionary<GameObject, float>();
+
+    public ShooterGameCamera main_camera;
 
 	public PlatformInputController input_controller;
 
@@ -38,7 +40,9 @@ public class GameSceneController : MonoBehaviour
 
 	public Dictionary<EnemyType, int> enemy_death_info_set = new Dictionary<EnemyType, int>();
 
-	public EnemyMap enemy_ref_map;
+    public Dictionary<string, float> boss_damage_record = new Dictionary<string, float>();
+
+    public EnemyMap enemy_ref_map;
 
 	public List<GameObject> wood_box_list;
 
@@ -208,7 +212,24 @@ public class GameSceneController : MonoBehaviour
 
 	protected RoamOrder roam_order;
 
-	public static GameSceneController Instance
+    public static HashSet<EnemyType> BossEnemyTypes = new HashSet<EnemyType>
+{
+    EnemyType.E_FATCOOK,
+    EnemyType.E_FATCOOK_E,
+    EnemyType.E_HAOKE_A,
+    EnemyType.E_HAOKE_B,
+    EnemyType.E_WRESTLER,
+    EnemyType.E_WRESTLER_E,
+    EnemyType.E_HALLOWEEN,
+    EnemyType.E_HALLOWEEN_E,
+    EnemyType.E_HALLOWEEN_SUB,
+    EnemyType.E_HALLOWEEN_SUB_E,
+    EnemyType.E_SHARK,
+    EnemyType.E_SHARK_E
+};
+
+
+    public static GameSceneController Instance
 	{
 		get
 		{
@@ -581,6 +602,11 @@ public class GameSceneController : MonoBehaviour
 			cur_game_info_panel = game_main_panel.time_alive_panel;
 			game_main_panel.EnableNpcHpBar(false);
 			break;
+        case MissionType.Endless:
+			mission_controller = base.gameObject.AddComponent<EndlessMissionController>();
+            cur_game_info_panel = game_main_panel.time_alive_panel;
+			game_main_panel.EnableNpcHpBar(false);
+			break;
 		case MissionType.Npc_Resources:
 			mission_controller = base.gameObject.AddComponent<NPCResourcesMissionController>();
 			cur_game_info_panel = game_main_panel.npc_res_panel;
@@ -714,6 +740,10 @@ public class GameSceneController : MonoBehaviour
 		case MissionType.Time_ALive:
 			hashtable2.Add("Time", (int)mission_controller.mission_total_time);
 			GameData.Instance.UploadStatistics("Mission_ALive", hashtable2);
+			break;
+        case MissionType.Endless:
+			hashtable2.Add("Time", (int)mission_controller.mission_total_time);
+			GameData.Instance.UploadStatistics("Mission_Endless", hashtable2);
 			break;
 		case MissionType.Npc_Resources:
 			hashtable2.Add("Time", (int)mission_controller.mission_total_time);
@@ -881,7 +911,11 @@ public class GameSceneController : MonoBehaviour
 		{
 			MissionWin();
 		}
-		else if (mission_controller.mission_type == MissionType.Npc_Resources)
+        else if (mission_controller.mission_type == MissionType.Endless)
+        {
+            MissionWin();
+        }
+        else if (mission_controller.mission_type == MissionType.Npc_Resources)
 		{
 			NPCResourcesMissionController nPCResourcesMissionController = mission_controller as NPCResourcesMissionController;
 			if (nPCResourcesMissionController.cur_res_count >= nPCResourcesMissionController.target_res_count)
@@ -928,7 +962,6 @@ public class GameSceneController : MonoBehaviour
 	{
 		mission_total_cash += cash;
 		GameData.Instance.total_cash += cash;
-		GameData.Instance.total_cash = new GameDataInt(Mathf.Clamp(GameData.Instance.total_cash.GetIntVal(), 0, 99999999));
 	}
 
 	public Vector3 GetSightScreenPos()
@@ -1065,6 +1098,8 @@ public class GameSceneController : MonoBehaviour
 		cur_auto_lock_time = 0f;
 		auto_lock_target = null;
 	}
+
+
 
 	public virtual void OnGamePause()
 	{

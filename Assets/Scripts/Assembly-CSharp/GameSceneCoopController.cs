@@ -379,6 +379,20 @@ public class GameSceneCoopController : GameSceneController
 
     public override void MissionFinished()
     {
+        int totalReward = 0;
+        foreach (KeyValuePair<string, float> entry in GameSceneController.Instance.boss_damage_record)
+        {
+            int money = Mathf.FloorToInt(entry.Value / 10f);
+            Debug.Log("game_reward: " + entry.Key + " damage:" + entry.Value + " money:" + money);
+            totalReward += money;
+        }
+
+        // Grant the reward to player
+        GameData.Instance.total_cash += totalReward;
+        Debug.Log("Total Coop Reward Added: " + totalReward);
+
+        // Optional: clear after awarding
+        GameSceneController.Instance.boss_damage_record.Clear();
         Debug.Log("Mission Finished:" + GamePlayingState);
         OpenClikPlugin.Hide();
         HidePanels();
@@ -472,17 +486,47 @@ public class GameSceneCoopController : GameSceneController
         List<GameRewardCoop> list = new List<GameRewardCoop>();
         CoopBossCfg coopBossCfg = GameConfig.Instance.Coop_Boss_Cfg_Set[GameConfig.GetEnemyTypeFromBossType(GameData.Instance.cur_coop_boss)];
         Debug.Log("Coop boss reward:" + coopBossCfg.ToString());
-        GameData.Instance.total_cash += coopBossCfg.reward_gold_failed;
-        PlayerID playerID = new PlayerID(player_controller.avatar_data.avatar_type, player_controller.avatar_data.avatar_state, player_controller.avatar_data.show_name, 0);
-        bool flag = false;
-        foreach (PlayerID key in Player_damage_Set.Keys)
+
+        float totalDamage = 0f;
+        PlayerID localPlayerID = player_controller.player_id;
+        Debug.Log("[Reward Check] Local player ID: " + localPlayerID.ToString());
+
+        foreach (KeyValuePair<PlayerID, float> pair in Player_damage_Set)
         {
-            GameReward weapon_fragment = null;
-            flag = ((key.tnet_id == player_controller.tnet_user.Id) ? true : false);
-            GameRewardCoop item = new GameRewardCoop(playerID.avatar_type, playerID.avatar_state, playerID.player_name, (int)Player_damage_Set[key], GameRewardCoop.RewardMoneyType.CASH, coopBossCfg.reward_gold_failed, weapon_fragment, flag, false);
+            PlayerID key = pair.Key;
+            float damage = pair.Value;
+            totalDamage += damage;
+
+            // Use your PlayerID equality (ignoring tnet_id) or custom comparison here:
+            bool isLocalPlayer = key == localPlayerID; // Or key.Equals(localPlayerID)
+
+            int rewardGold = Mathf.Min(Mathf.FloorToInt(damage / 10f), coopBossCfg.reward_gold_failed);
+
+            if (isLocalPlayer)
+            {
+                GameData.Instance.total_cash += rewardGold;
+            }
+
+            Debug.Log("game_reward: " + key.player_name + " damage: " + damage + " money: " + rewardGold);
+
+            GameRewardCoop item = new GameRewardCoop(
+                key.avatar_type,
+                key.avatar_state,
+                key.player_name,
+                (int)damage,
+                GameRewardCoop.RewardMoneyType.CASH,
+                rewardGold,
+                null,
+                isLocalPlayer,
+                false
+            );
+
             list.Add(item);
         }
+
+        Debug.Log("Total Coop Reward Added: " + Mathf.FloorToInt(totalDamage / 10f));
         reward_coop_panel.ResetGameReward(list);
+
         Hashtable hashtable = new Hashtable();
         hashtable.Add("Boss", coopBossCfg.boss_name);
         hashtable.Add("Time", (int)(Time.time - coop_start_time));

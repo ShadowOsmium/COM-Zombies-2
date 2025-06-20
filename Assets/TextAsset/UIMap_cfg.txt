@@ -1151,11 +1151,32 @@
 					<height>124</height>
 				</FrameInfo>
 				<FrameInfo>
+					<frameName>mission_time_2</frameName>
+					<x>804</x>
+					<y>95</y>
+					<width>98</width>
+					<height>124</height>
+				</FrameInfo>
+				<FrameInfo>
 					<frameName>mission_resource_2</frameName>
 					<x>545</x>
 					<y>2</y>
 					<width>98</width>
 					<height>124</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>endless</frameName>
+					<x>822</x>
+					<y>117</y>
+					<width>67</width>
+					<height>60</height>
+				</FrameInfo>
+					<FrameInfo>
+					<frameName>endless_1</frameName>
+					<x>933</x>
+					<y>188</y>
+					<width>81</width>
+					<height>105</height>
 				</FrameInfo>
 				<FrameInfo>
 					<frameName>back_p</frameName>

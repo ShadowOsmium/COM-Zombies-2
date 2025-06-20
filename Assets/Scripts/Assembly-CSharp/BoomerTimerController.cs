@@ -152,34 +152,34 @@ public class BoomerTimerController : EnemyController
 		float num = dictionary[key];
 		dictionary2[key2] = num + damage;
 		OnHitSound(weapon);
-		//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f && tnetObj != null)
-		//{
-		//	SFSObject sFSObject = new SFSObject();
-		//	SFSArray sFSArray = new SFSArray();
-		//	sFSArray.AddShort((short)enemy_id);
-		//	sFSArray.AddFloat(damage);
-		//	if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
-		//	{
-		//		tem_frozenTime = ((IceGunController)weapon).frozenTime;
-		//		sFSArray.AddBool(true);
-		//		sFSArray.AddFloat(tem_frozenTime);
-		//	}
-		//	else
-		//	{
-		//		sFSArray.AddBool(false);
-		//		sFSArray.AddFloat(0f);
-		//	}
-		//	sFSObject.PutSFSArray("enemyInjured", sFSArray);
-		//	tnetObj.Send(new BroadcastMessageRequest(sFSObject));
-		//	Dictionary<PlayerID, float> player_damage_Set;
-		//	Dictionary<PlayerID, float> dictionary3 = (player_damage_Set = GameSceneController.Instance.Player_damage_Set);
-		//	PlayerID player_id;
-		//	PlayerID key3 = (player_id = GameSceneController.Instance.player_controller.player_id);
-		//	num = player_damage_Set[player_id];
-		//	dictionary3[key3] = num + damage;
-		//}
-		if (enemy_data.OnInjured(damage))
-		{
+        //if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f && tnetObj != null)
+        //{
+        //	SFSObject sFSObject = new SFSObject();
+        //	SFSArray sFSArray = new SFSArray();
+        //	sFSArray.AddShort((short)enemy_id);
+        //	sFSArray.AddFloat(damage);
+        //	if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
+        //	{
+        //		tem_frozenTime = ((IceGunController)weapon).frozenTime;
+        //		sFSArray.AddBool(true);
+        //		sFSArray.AddFloat(tem_frozenTime);
+        //	}
+        //	else
+        //	{
+        //		sFSArray.AddBool(false);
+        //		sFSArray.AddFloat(0f);
+        //	}
+        //	sFSObject.PutSFSArray("enemyInjured", sFSArray);
+        //	tnetObj.Send(new BroadcastMessageRequest(sFSObject));
+        //	Dictionary<PlayerID, float> player_damage_Set;
+        //	Dictionary<PlayerID, float> dictionary3 = (player_damage_Set = GameSceneController.Instance.Player_damage_Set);
+        //	PlayerID player_id;
+        //	PlayerID key3 = (player_id = GameSceneController.Instance.player_controller.player_id);
+        //	num = player_damage_Set[player_id];
+        //	dictionary3[key3] = num + damage;
+        //}
+        if (enemy_data.OnInjured(damage, player.GetComponent<ObjectController>()))
+        {
 			if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
 			{
 				is_ice_dead = true;

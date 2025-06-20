@@ -144,8 +144,8 @@ public class BoomerController : EnemyController
 		//	num = player_damage_Set[player_id];
 		//	dictionary3[key3] = num + damage;
 		//}
-		if (enemy_data.OnInjured(damage))
-		{
+		if (enemy_data.OnInjured(damage, player.GetComponent<ObjectController>()))
+        {
 			if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
 			{
 				is_ice_dead = true;

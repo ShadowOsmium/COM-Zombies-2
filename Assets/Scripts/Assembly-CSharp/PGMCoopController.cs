@@ -98,11 +98,11 @@ public class PGMCoopController : WeaponCoopController
 			base.Fire(player, deltaTime);
 			AnimationUtil.Stop(player.gameObject, player.GetFireStateAnimation(player.MoveState, player.FireState));
 			AnimationUtil.PlayAnimate(player.gameObject, player.GetFireStateAnimation(player.MoveState, player.FireState), WrapMode.ClampForever);
-			if (player.avatar_data.avatar_type == AvatarType.Cowboy)
+			/*if (player.avatar_data.avatar_type == AvatarType.Cowboy)
 			{
 				AnimationUtil.Stop(player.CowboyCap);
 				AnimationUtil.PlayAnimate(player.CowboyCap, "RPG_Shooting01", WrapMode.Once);
-			}
+			}*/
 		}
 	}
 
@@ -144,7 +144,7 @@ public class PGMCoopController : WeaponCoopController
 			GameObject gameObject = Object.Instantiate(Accessory[4], base.transform.position, Quaternion.LookRotation(normalized)) as GameObject;
 			PGMCoopProjectile component = gameObject.GetComponent<PGMCoopProjectile>();
 			component.launch_dir = normalized;
-			component.fly_speed = 20f;
+			component.fly_speed = 30f;
 			component.explode_radius = explode_radius;
 			component.life = 10f;
 			component.damage = 0f;

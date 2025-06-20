@@ -2299,13 +2299,6 @@
 					<height>38</height>
 				</FrameInfo>
 				<FrameInfo>
-					<frameName>Wrestler_icon_s</frameName>
-					<x>859</x>
-					<y>482</y>
-					<width>38</width>
-					<height>38</height>
-				</FrameInfo>
-				<FrameInfo>
 					<frameName>Human_01_icon_s</frameName>
 					<x>900</x>
 					<y>482</y>
@@ -2383,6 +2376,48 @@
 					<height>38</height>
 				</FrameInfo>
 				<FrameInfo>
+					<frameName>FatCook_icon_s</frameName>
+					<x>861</x>
+					<y>523</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+					<FrameInfo>
+					<frameName>FatCook_E_icon_s</frameName>
+					<x>861</x>
+					<y>523</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>Haoke_A_icon_s</frameName>
+					<x>248</x>
+					<y>527</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>Haoke_B_icon_s</frameName>
+					<x>166</x>
+					<y>527</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>Wrestler_icon_s</frameName>
+					<x>859</x>
+					<y>482</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>Wrestler_E_icon_s</frameName>
+					<x>859</x>
+					<y>482</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
 					<frameName>Halloween_icon_s</frameName>
 					<x>820</x>
 					<y>523</y>
@@ -2390,22 +2425,22 @@
 					<height>38</height>
 				</FrameInfo>
 				<FrameInfo>
-					<frameName>FatCook_icon_s</frameName>
-					<x>861</x>
+					<frameName>Shark_icon_s</frameName>
+					<x>943</x>
 					<y>523</y>
+					<width>38</width>
+					<height>38</height>
+				</FrameInfo>
+				<FrameInfo>
+					<frameName>Shark_E_icon_s</frameName>
+					<x>543</x>
+					<y>543</y>
 					<width>38</width>
 					<height>38</height>
 				</FrameInfo>
 				<FrameInfo>
 					<frameName>shijian</frameName>
 					<x>902</x>
-					<y>523</y>
-					<width>38</width>
-					<height>38</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>Shark_icon_s</frameName>
-					<x>943</x>
 					<y>523</y>
 					<width>38</width>
 					<height>38</height>
@@ -2425,22 +2460,8 @@
 					<height>38</height>
 				</FrameInfo>
 				<FrameInfo>
-					<frameName>Haoke_B_icon_s</frameName>
-					<x>166</x>
-					<y>527</y>
-					<width>38</width>
-					<height>38</height>
-				</FrameInfo>
-				<FrameInfo>
 					<frameName>Doctor_01_icon_s</frameName>
 					<x>207</x>
-					<y>527</y>
-					<width>38</width>
-					<height>38</height>
-				</FrameInfo>
-				<FrameInfo>
-					<frameName>Haoke_A_icon_s</frameName>
-					<x>248</x>
 					<y>527</y>
 					<width>38</width>
 					<height>38</height>

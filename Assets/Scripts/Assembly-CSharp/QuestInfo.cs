@@ -39,6 +39,9 @@ public class QuestInfo
 		case MissionType.Boss:
 			mission_tag = GameConfig.Instance.boss_mission_comment;
 			break;
+        case MissionType.Endless:
+			mission_tag = GameConfig.Instance.endless_mission_comment;
+			break;
 		}
 	}
 }

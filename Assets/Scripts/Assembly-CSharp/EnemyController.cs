@@ -877,87 +877,116 @@ public class EnemyController : ObjectController
 	{
 	}
 
-	public override void OnHit(float damage, WeaponController weapon, ObjectController player, Vector3 hit_point, Vector3 hit_normal)
-	{
-		if (enemyState == SHOW_STATE || enemyState == DEAD_STATE)
-		{
-			return;
-		}
-		injured_time = Time.time;
-		if (!hatred_set.ContainsKey(player))
-		{
-			hatred_set.Add(player, 1f);
-		}
-		Dictionary<ObjectController, float> dictionary;
-		Dictionary<ObjectController, float> dictionary2 = (dictionary = hatred_set);
-		ObjectController key;
-		ObjectController key2 = (key = player);
-		float num = dictionary[key];
-		dictionary2[key2] = num + damage;
-		OnHitSound(weapon);
-		//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f && tnetObj != null)
-		//{
-		//	SFSObject sFSObject = new SFSObject();
-		//	SFSArray sFSArray = new SFSArray();
-		//	sFSArray.AddShort((short)enemy_id);
-		//	sFSArray.AddFloat(damage);
-		//	if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
-		//	{
-		//		tem_frozenTime = ((IceGunController)weapon).frozenTime;
-		//		sFSArray.AddBool(true);
-		//		sFSArray.AddFloat(tem_frozenTime);
-		//	}
-		//	else
-		//	{
-		//		sFSArray.AddBool(false);
-		//		sFSArray.AddFloat(0f);
-		//	}
-		//	sFSObject.PutSFSArray("enemyInjured", sFSArray);
-		//	tnetObj.Send(new BroadcastMessageRequest(sFSObject));
-		//	Dictionary<PlayerID, float> player_damage_Set;
-		//	Dictionary<PlayerID, float> dictionary3 = (player_damage_Set = GameSceneController.Instance.Player_damage_Set);
-		//	PlayerID player_id;
-		//	PlayerID key3 = (player_id = GameSceneController.Instance.player_controller.player_id);
-		//	num = player_damage_Set[player_id];
-		//	dictionary3[key3] = num + damage;
-		//}
-		if (enemy_data.OnInjured(damage))
-		{
-			if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
-			{
-				is_ice_dead = true;
-				PlayPlayerAudio("FreezeBurst");
-			}
-			GameSceneController.Instance.UpdateEnemyDeathInfo(enemy_data.enemy_type, 1);
-			OnDead(damage, weapon, player, hit_point, hit_normal);
-			SetState(DEAD_STATE);
-			//if (GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f && tnetObj != null)
-			//{
-			//	SFSObject sFSObject2 = new SFSObject();
-			//	SFSArray sFSArray2 = new SFSArray();
-			//	sFSArray2.AddShort((short)enemy_id);
-			//	sFSArray2.AddFloat(damage);
-			//	sFSObject2.PutSFSArray("enemyDead", sFSArray2);
-			//	tnetObj.Send(new BroadcastMessageRequest(sFSObject2));
-			//}
-		}
-		else if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
-		{
-			frozenTime = ((IceGunController)weapon).frozenTime;
-			AnimationUtil.Stop(base.gameObject);
-			SetState(FROZEN_STATE);
-		}
-		else
-		{
-			AnimationUtil.Stop(base.gameObject);
-			AnimationUtil.PlayAnimate(base.gameObject, ANI_INJURED, WrapMode.ClampForever);
-			SetState(INJURED_STATE);
-			CreateInjuredBloodEff(hit_point, hit_normal);
-		}
-		UpdateCurHpBar();
-	}
+    public override void OnHit(float damage, WeaponController weapon, ObjectController player, Vector3 hit_point, Vector3 hit_normal)
+    {
+        if (enemyState == SHOW_STATE || enemyState == DEAD_STATE)
+            return;
 
-	public virtual void OnHitRemote(float damage, ObjectController player, bool is_frozen, float ice_time)
+        injured_time = Time.time;
+
+        if (!hatred_set.ContainsKey(player))
+            hatred_set.Add(player, 1f);
+        hatred_set[player] += damage;
+
+        OnHitSound(weapon);
+
+        // Track coop boss damage
+        bool isBoss = GameSceneController.BossEnemyTypes.Contains(enemy_data.enemy_type);
+        if (isBoss && GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f)
+        {
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                PlayerID playerID = pc.player_id;
+
+                float existingDamage = 0f;
+                if (GameSceneController.Instance.Player_damage_Set.TryGetValue(playerID, out existingDamage))
+                {
+                    GameSceneController.Instance.Player_damage_Set[playerID] = existingDamage + damage;
+                    Debug.Log("[OnHit] Added damage " + damage + " to player " + playerID.ToString() + ". Total damage now: " + (existingDamage + damage));
+                }
+                else
+                {
+                    GameSceneController.Instance.Player_damage_Set[playerID] = damage;
+                    Debug.LogWarning("[OnHit] PlayerID not found in damage set, initializing damage: " + playerID.ToString());
+                }
+
+                Debug.Log("[Damage Track] +" + damage.ToString() + " for: " + playerID.ToString());
+            }
+        }
+
+        if (enemy_data.OnInjured(damage, player.GetComponent<ObjectController>()))
+        {
+            if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
+            {
+                is_ice_dead = true;
+                PlayPlayerAudio("FreezeBurst");
+            }
+            GameSceneController.Instance.UpdateEnemyDeathInfo(enemy_data.enemy_type, 1);
+            OnDead(damage, weapon, player, hit_point, hit_normal);
+            SetState(DEAD_STATE);
+        }
+        else if (weapon != null && weapon.weapon_type == WeaponType.IceGun)
+        {
+            frozenTime = ((IceGunController)weapon).frozenTime;
+            AnimationUtil.Stop(base.gameObject);
+            SetState(FROZEN_STATE);
+        }
+        else
+        {
+            AnimationUtil.Stop(base.gameObject);
+            AnimationUtil.PlayAnimate(base.gameObject, ANI_INJURED, WrapMode.ClampForever);
+            SetState(INJURED_STATE);
+            CreateInjuredBloodEff(hit_point, hit_normal);
+        }
+
+        UpdateCurHpBar();
+    }
+
+    public virtual void OnHitRemote(float damage, ObjectController player, bool is_frozen, float ice_time)
+    {
+        if (enemyState != DEAD_STATE)
+        {
+            if (!hatred_set.ContainsKey(player))
+            {
+                hatred_set.Add(player, 1f);
+            }
+            Dictionary<ObjectController, float> dictionary;
+            Dictionary<ObjectController, float> dictionary2 = (dictionary = hatred_set);
+            ObjectController key;
+            ObjectController key2 = (key = player);
+            float num = dictionary[key];
+            dictionary2[key2] = num + damage;
+
+            if (is_frozen)
+            {
+                frozenTime = ice_time;
+                AnimationUtil.Stop(base.gameObject);
+                SetState(FROZEN_STATE);
+            }
+
+            // Track boss damage for coop reward (UI Still Buggy)
+            bool isBoss = GameSceneController.BossEnemyTypes.Contains(enemy_data.enemy_type);
+            if (isBoss && GameData.Instance.cur_game_type == GameData.GamePlayType.Coop && damage > 0f)
+            {
+                PlayerController pc = player.GetComponent<PlayerController>();
+                if (pc != null)
+                {
+                    PlayerID playerID = pc.player_id;
+                    if (!GameSceneController.Instance.Player_damage_Set.ContainsKey(playerID))
+                    {
+                        GameSceneController.Instance.Player_damage_Set[playerID] = 0f;
+                    }
+                    GameSceneController.Instance.Player_damage_Set[playerID] += damage;
+                }
+            }
+
+            enemy_data.OnInjured(damage, player.GetComponent<ObjectController>());
+            UpdateCurHpBar();
+        }
+    }
+
+    public virtual void OnDeadRemote(float damage, ObjectController player)
 	{
 		if (enemyState != DEAD_STATE)
 		{
@@ -971,33 +1000,8 @@ public class EnemyController : ObjectController
 			ObjectController key2 = (key = player);
 			float num = dictionary[key];
 			dictionary2[key2] = num + damage;
-			if (is_frozen)
-			{
-				frozenTime = ice_time;
-				AnimationUtil.Stop(base.gameObject);
-				SetState(FROZEN_STATE);
-			}
-			enemy_data.OnInjured(damage);
-			UpdateCurHpBar();
-		}
-	}
-
-	public virtual void OnDeadRemote(float damage, ObjectController player)
-	{
-		if (enemyState != DEAD_STATE)
-		{
-			if (!hatred_set.ContainsKey(player))
-			{
-				hatred_set.Add(player, 1f);
-			}
-			Dictionary<ObjectController, float> dictionary;
-			Dictionary<ObjectController, float> dictionary2 = (dictionary = hatred_set);
-			ObjectController key;
-			ObjectController key2 = (key = player);
-			float num = dictionary[key];
-			dictionary2[key2] = num + damage;
-			enemy_data.OnInjured(damage);
-			GameSceneController.Instance.UpdateEnemyDeathInfo(enemy_data.enemy_type, 1);
+            enemy_data.OnInjured(damage, player.GetComponent<ObjectController>());
+            GameSceneController.Instance.UpdateEnemyDeathInfo(enemy_data.enemy_type, 1);
 			OnDead(damage, null, player, base.transform.transform.position, Vector3.up);
 			SetState(DEAD_STATE);
 		}
@@ -1147,8 +1151,8 @@ public class EnemyController : ObjectController
 			ObjectController key2 = (key = player);
 			float num = dictionary[key];
 			dictionary2[key2] = num + damage;
-			enemy_data.OnInjured(damage);
-			SetState(CHAISAW_INJURED_STATE);
+            enemy_data.OnInjured(damage, player.GetComponent<ObjectController>());
+            SetState(CHAISAW_INJURED_STATE);
 			return true;
 		}
 		return false;

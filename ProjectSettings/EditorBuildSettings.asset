@@ -66,6 +66,9 @@ EditorBuildSettings:
     path: Assets/Scene/Scenes/COM2_ZERO_1.unity
     guid: 254002d390f58fb4287154563414d2b0
   - enabled: 1
+    path: Assets/Scene/Scenes/COM2_ZERO_2.unity
+    guid: 2a6f853312ec5074e8d39697ba93e571
+  - enabled: 1
     path: Assets/Scene/Scenes/Junkyard.unity
     guid: 838046c69ca9a874bba58e6a5d5498ed
   - enabled: 1

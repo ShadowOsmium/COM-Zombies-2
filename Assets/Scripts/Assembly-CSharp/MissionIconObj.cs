@@ -25,12 +25,13 @@ public class MissionIconObj : MonoBehaviour
 
 	public void Init(QuestInfo info)
 	{
-		questInfo = info;
+        TUIControl control = GetComponent<TUIControl>();
+        questInfo = info;
 		TUIMeshSprite background = Background;
 		int mission_day_type = (int)info.mission_day_type;
 		background.texture = "mission_bk_" + mission_day_type.ToString("G");
 		string text = "mission_";
-		text = ((info.mission_type == MissionType.Boss) ? (text + "boss_") : ((info.mission_type == MissionType.Npc_Convoy) ? (text + "help_") : ((info.mission_type != MissionType.Npc_Resources) ? (text + "zombie_") : (text + "resource_"))));
+		text = ((info.mission_type == MissionType.Boss) ? (text + "boss_") : ((info.mission_type == MissionType.Npc_Convoy) ? (text + "help_") : ((info.mission_type == MissionType.Endless) ? (text + "time_") : ((info.mission_type != MissionType.Npc_Resources) ? (text + "zombie_") : (text + "resource_")))));
 		string text2 = text;
 		int mission_day_type2 = (int)info.mission_day_type;
 		text = text2 + mission_day_type2.ToString("G");
@@ -44,13 +45,17 @@ public class MissionIconObj : MonoBehaviour
 			mapPoint = UIMapSceneController.Instance.coop_trans;
 			Background.texture = string.Empty;
 		}
-		else
+        else if (info.mission_day_type == MissionDayType.Endless)
+        {
+            text = "endless"; // Make sure this texture exists
+        }
+        else
 		{
 			int index = Random.Range(0, UIMapSceneController.Instance.mission_icon_trans_list.Count);
 			mapPoint = UIMapSceneController.Instance.mission_icon_trans_list[index];
 			UIMapSceneController.Instance.mission_icon_trans_list.RemoveAt(index);
 		}
-		PositionFromWorldToTUI(mapPoint.position);
+        PositionFromWorldToTUI(mapPoint.position);
 		UpdateArrow();
 	}
 
