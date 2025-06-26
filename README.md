@@ -4,8 +4,8 @@
 
 ![Android](https://img.shields.io/badge/Platform-Android-green?logo=android&style=flat-square)
 ![Windows](https://img.shields.io/badge/Platform-Windows-blue?logo=windows&style=flat-square)
-![Release](https://img.shields.io/badge/Release-v1.3-orange?style=flat-square)
-![Next Release](https://img.shields.io/badge/Next--Up-v1.4-yellow?style=flat-square)
+![Release](https://img.shields.io/badge/Release-v1.2-orange?style=flat-square)
+![Next Release](https://img.shields.io/badge/Next--Up-v1.3.1-yellow?style=flat-square)
 
 ## What is this mod about?
 
@@ -25,7 +25,7 @@ The following changes are eihter current or future changes.
 | Controls                    | Manual                      | Smoother PC Controls                                        |
 | Bugs & Typos               | A Lot Of Bugs                 | Fixed A Lot Of Bugs Triniti Didn't                                                  |
 | Textures                   | Original                     | Redone Most To Look Better         |
-
+| Gamemodes                   | Few                          | Added An Endless Game Mode                                                   |
 ---
 
 ## 🚀 Installation Instructions
