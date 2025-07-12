@@ -19,6 +19,7 @@ The following changes are eihter current or future changes.
 | Boss Raid              | Somewhat Not Great Rewards              | More Rewarding And Elite Variants For All Bosses                                             |
 | Mission                     | Days Were Too Easy           | Somewhat Difficult But Balanced, While Also Adding Variation And Scrapped Mission Types                             |
 | Weapons                   | Super Unbalanced And Expensive/Too Cheap | Prices Rebalanced And Rebalanced Guns                                     |
+| Upgrades                   | Unbalanced Weapon Upgrading                          | Somewhat Restrictive Upgrades                                                   |
 | Skills                   | Super Weak/Too Strong | Prices Rebalanced And Rebalanced Skill Upgrades And Pricing                                     |
 | Leveling Up Characters        | Level 30 Max Upgrades                 | Level 60 Max Upgrades                     |      |
 | UI                          | Original                      | Enhanced Main Menu Look                                      |
@@ -26,6 +27,7 @@ The following changes are eihter current or future changes.
 | Bugs & Typos               | A Lot Of Bugs                 | Fixed A Lot Of Bugs Triniti Didn't                                                  |
 | Textures                   | Original                     | Redone Most To Look Better         |
 | Gamemodes                   | Few                          | Added An Endless Game Mode                                                   |
+| Daily Missions                   | Lacking Variety And Easily Exploitable                          | Easy And Hard Daily Missions Are Now Seperated In Enemies And Spawn Their Retrospective Enemy Types          |
 ---
 
 ## 🚀 Installation Instructions
@@ -36,7 +38,7 @@ The following changes are eihter current or future changes.
    `COMZ2.apk`
 2. Allow installation from unknown sources on your Android device if needed.
 3. Open the APK to install the game.
-4. Launch and enjoy hunting dinos on the go!
+4. Launch and enjoy killing zombies on the go!
 
 ### PC (Windows)
 
@@ -58,7 +60,6 @@ The following changes are eihter current or future changes.
 
 - **Move:** WASD  
 - **Shoot:** Left Mouse Button  
-- **Lock Cursor:** Right Click To Enforce It (Mostly Automatic)  
 - **Pause/Menu:** Esc key  
 - **Ability:** Num 1
 
